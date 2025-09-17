@@ -1,101 +1,99 @@
-<div>
-    <livewire:components.navbar />
+<?php
 
-    <div id="connection" class="container mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 p-4">
-            <div class="max-w-md w-full rounded-xl shadow-xl my-10 p-4 md:p-8">
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold text-blue-800">Join with other researcher</h2>
-                </div>
+use App\Models\User;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
+use Livewire\Attributes\Layout;
+use Livewire\Volt\Component;
 
-                @if (session()->has('success'))
-                    <div class="mb-4 p-3 bg-green-100 text-green-800 rounded-lg">
-                        {{ session('success') }}
-                    </div>
-                @endif
+new #[Layout('components.layouts.auth')] class extends Component {
+    public string $name = '';
+    public string $email = '';
+    public string $password = '';
+    public string $password_confirmation = '';
 
-                <form class="space-y-4" wire:submit.prevent="submit">
-                    <div>
-                        <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
-                        <input 
-                            type="text" 
-                            id="fullName" 
-                            wire:model="fullName" 
-                            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" 
-                            placeholder="Enter your full name" 
-                            autocomplete="name"
-                        >
-                        @error('fullName') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
-                    </div>
+    /**
+     * Handle an incoming registration request.
+     */
+    public function register(): void
+    {
+        $validated = $this->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+        ]);
 
-                    <div>
-                        <label for="instituteEmail" class="block text-sm font-medium text-gray-700 mb-1">Institute Email*</label>
-                        <input 
-                            type="email" 
-                            id="instituteEmail" 
-                            wire:model="instituteEmail" 
-                            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" 
-                            placeholder="Enter your institute email" 
-                            autocomplete="email"
-                        >
-                        @error('instituteEmail') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
-                    </div>
+        $validated['password'] = Hash::make($validated['password']);
 
-                    <div>
-                        <label for="otherPassword" class="block text-sm font-medium text-gray-700 mb-1">Password*</label>
-                        <div class="relative">
-                            <input 
-                                type="password" 
-                                id="otherPassword" 
-                                wire:model="otherPassword" 
-                                class="w-full p-3 border border-gray-300 rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" 
-                                placeholder="Create a password"
-                            >
-                            <button 
-                                type="button" 
-                                onclick="togglePassword()" 
-                                class="absolute inset-y-0 right-3 flex items-center text-gray-500"
-                            >
-                                <i id="passwordIcon" class="fa-solid fa-eye"></i>
-                            </button>
-                        </div>
-                        @error('otherPassword') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
-                    </div>
+        event(new Registered(($user = User::create($validated))));
 
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone*</label>
-                        <input 
-                            type="tel" 
-                            id="phone" 
-                            wire:model="phone" 
-                            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" 
-                            placeholder="Enter your phone number" 
-                            inputmode="numeric" 
-                            autocomplete="tel"
-                        >
-                        @error('phone') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
-                    </div>
+        Auth::login($user);
 
-                    <div class="flex items-start gap-2">
-                        <input 
-                            type="checkbox" 
-                            id="policyagreement" 
-                            wire:model="policyagreement" 
-                            class="h-4 w-4 text-blue-900 border-gray-300 rounded mt-1"
-                        >
-                        <label for="policyagreement" class="text-sm text-gray-600">
-                            I agree to <a href="#" class="text-blue-600 hover:underline">privacy policy & terms</a>
-                        </label>
-                    </div>
-                    @error('policyagreement') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
+        $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
+    }
+}; ?>
 
-                    <button 
-                        type="submit" 
-                        class="w-full py-3 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                        Complete Registration
-                    </button>
-                </form>
-            </div>
+<div class="flex flex-col gap-6">
+    <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
+
+    <!-- Session Status -->
+    <x-auth-session-status class="text-center" :status="session('status')" />
+
+    <form wire:submit="register" class="flex flex-col gap-6">
+        <!-- Name -->
+        <flux:input
+            wire:model="name"
+            :label="__('Name')"
+            type="text"
+            required
+            autofocus
+            autocomplete="name"
+            :placeholder="__('Full name')"
+        />
+
+        <!-- Email Address -->
+        <flux:input
+            wire:model="email"
+            :label="__('Email address')"
+            type="email"
+            required
+            autocomplete="email"
+            placeholder="email@example.com"
+        />
+
+        <!-- Password -->
+        <flux:input
+            wire:model="password"
+            :label="__('Password')"
+            type="password"
+            required
+            autocomplete="new-password"
+            :placeholder="__('Password')"
+            viewable
+        />
+
+        <!-- Confirm Password -->
+        <flux:input
+            wire:model="password_confirmation"
+            :label="__('Confirm password')"
+            type="password"
+            required
+            autocomplete="new-password"
+            :placeholder="__('Confirm password')"
+            viewable
+        />
+
+        <div class="flex items-center justify-end">
+            <flux:button type="submit" variant="primary" class="w-full">
+                {{ __('Create account') }}
+            </flux:button>
         </div>
+    </form>
 
-        <livewire:components.footer />
+    <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
+        <span>{{ __('Already have an account?') }}</span>
+        <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
+    </div>
 </div>
