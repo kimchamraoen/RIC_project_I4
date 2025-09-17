@@ -1,127 +1,65 @@
-<?php
+<div>
+    <livewire:components.navbar />
 
-use Illuminate\Auth\Events\Lockout;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+    <div id="login" class="flex flex-col md:flex-row items-center justify-center p-8 gap-8 md:gap-16">
+            <div class="max-w-md w-full shadow-xl p-10 md:p-10 rounded-32">
+                <div class="text-center">
+                    <h3 class="text-2xl font-bold text-blue-800">Login to RIC</h3>
+                    <p class="text-gray-500">Research and Innovation Center</p>
+                </div>
 
-new #[Layout('components.layouts.auth')] class extends Component {
-    #[Validate('required|string|email')]
-    public string $email = '';
+                <form class="space-y-4" wire:submit.prevent="login">
+                    <div>
+                        <label for="userEmail" class="block text-sm font-medium text-gray-700">Email*</label>
+                        <input wire:model="email" type="email" id="userEmail"
+                                class="w-full mt-1 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 p-2 border"
+                                placeholder="Enter your email" required>
+                    </div>
+                    @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-    #[Validate('required|string')]
-    public string $password = '';
+                    <div>
+                        <label for="userPassword" class="block text-sm font-medium text-gray-700">Password*</label>
+                        <input wire:model="password" type="password" id="userPassword"
+                                class="w-full mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 p-2"
+                                placeholder="" required>
+                    </div>
+                    @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-    public bool $remember = false;
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="policyagreement"
+                                class="h-4 w-4 text-blue-900 border-gray-300 rounded">
+                        <label for="policyagreement" class="text-sm text-gray-600">
+                            I agree to
+                            <a href="#" class="text-blue-600 hover:underline">privacy policy & terms</a>
+                        </label>
+                    </div>
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function login(): void
-    {
-        $this->validate();
+                    <div>
+                        <button type="submit" class="w-full py-2 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            Login
+                        </button>
+                    </div>
+                </form>
 
-        $this->ensureIsNotRateLimited();
+                <p class="text-sm text-gray-600 text-center mt-4">
+                    Don't have an account?
+                    <a href="/conduct" class="text-blue-600 hover:underline">Sign up</a>
+                </p>
 
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
-            RateLimiter::hit($this->throttleKey());
+                <div class="flex items-center justify-center space-x-2 my-4">
+                    <span class="h-px bg-gray-300 flex-1"></span>
+                    <span class="text-sm text-gray-500">or</span>
+                    <span class="h-px bg-gray-300 flex-1"></span>
+                </div>
 
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
-        Session::regenerate();
-
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
-    }
-
-    /**
-     * Ensure the authentication request is not rate limited.
-     */
-    protected function ensureIsNotRateLimited(): void
-    {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
-            return;
-        }
-
-        event(new Lockout(request()));
-
-        $seconds = RateLimiter::availableIn($this->throttleKey());
-
-        throw ValidationException::withMessages([
-            'email' => __('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
-        ]);
-    }
-
-    /**
-     * Get the authentication rate limiting throttle key.
-     */
-    protected function throttleKey(): string
-    {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
-    }
-}; ?>
-
-<div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
-
-    <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
-
-    <form wire:submit="login" class="flex flex-col gap-6">
-        <!-- Email Address -->
-        <flux:input
-            wire:model="email"
-            :label="__('Email address')"
-            type="email"
-            required
-            autofocus
-            autocomplete="email"
-            placeholder="email@example.com"
-        />
-
-        <!-- Password -->
-        <div class="relative">
-            <flux:input
-                wire:model="password"
-                :label="__('Password')"
-                type="password"
-                required
-                autocomplete="current-password"
-                :placeholder="__('Password')"
-                viewable
-            />
-
-            @if (Route::has('password.request'))
-                <flux:link class="absolute end-0 top-0 text-sm" :href="route('password.request')" wire:navigate>
-                    {{ __('Forgot your password?') }}
-                </flux:link>
-            @endif
+                <button id="googleBtn" type="button" class="w-full flex items-center justify-center gap-2 py-2 transition-colors border border-gray-300 rounded-lg hover:bg-gray-100">
+                    <img src="https://cdn.flyonui.com/fy-assets/blocks/marketing-ui/brand-logo/google-icon.png"
+                        alt="google icon"
+                        class="w-5 h-5 object-cover">
+                    Sign in with Google
+                </button>
+            </div>
         </div>
 
-        <!-- Remember Me -->
-        <flux:checkbox wire:model="remember" :label="__('Remember me')" />
-
-        <div class="flex items-center justify-end">
-            <flux:button variant="primary" type="submit" class="w-full">{{ __('Log in') }}</flux:button>
-        </div>
-    </form>
-
-    @if (Route::has('register'))
-        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-            <span>{{ __('Don\'t have an account?') }}</span>
-            <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
-        </div>
-    @endif
+    <livewire:components.footer />
 </div>

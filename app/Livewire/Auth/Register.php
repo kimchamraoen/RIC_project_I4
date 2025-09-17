@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Auth;
 
-use Livewire\Component;
 use App\Models\User;
+use Livewire\Component;
 
 class Register extends Component
 {
@@ -12,12 +12,7 @@ class Register extends Component
     public $password;
     public $confirm_password;
 
-    public function render()
-    {
-        return view('livewire.register');
-    }
-
-    public function resetField()
+     public function resetField()
     {
         $this->name = '';
         $this->email = '';
@@ -40,5 +35,10 @@ class Register extends Component
         $user->save();
         $this->resetField();
         return redirect('/login')->with('success', 'Registration successful.');
+    }
+
+    public function render()
+    {
+        return view('livewire.auth.register');
     }
 }
