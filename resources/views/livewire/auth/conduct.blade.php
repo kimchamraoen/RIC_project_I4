@@ -13,11 +13,13 @@
                         <label for="researchInstitute" class="block text-sm font-medium text-gray-700 mb-1">Institution*</label>
                         <input wire:model="institution" type="text" id="researchInstitute" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" placeholder="Enter Institute" required>
                         <div id="researchInstituteError" class="text-red-500 text-sm mt-1 hidden">Please enter your Institution</div>
+                        @error('institution') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
+                    
 
                     <div>
                         <label for="faculty" class="block text-sm font-medium text-gray-700 mb-1">Faculty*</label>
-                        <input wire:model="faculty" type="text" id="faculty" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" placeholder="Enter your faculty" required>
+                        <input wire:model="faculty" type="text" id="faculty" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" placeholder="Enter your faculty">
                         <div id="facultyError" class="text-red-500 text-sm mt-1 hidden">Please enter your Faculty</div>
                     </div>
 
@@ -33,27 +35,31 @@
                             <option value="gti">GTI</option>
                         </select>
                         <div id="departmentError" class="text-red-500 text-sm mt-1 hidden">Please select a department</div>
+                        @error('department') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
+                    
 
                     <div>
                         <label for="researchUnit" class="block text-sm font-medium text-gray-700 mb-1">Research Unit*</label>
-                        <input wire:model="researchUnit" type="text" id="researchUnit" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" placeholder="Enter your Research Unit" required>
+                        <input wire:model="research_unit" type="text" id="researchUnit" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" placeholder="Enter your Research Unit">
                         <div id="researchUnitError" class="text-red-500 text-sm mt-1 hidden">Please enter your Research Unit</div>
                     </div>
 
                     <div>
                         <label for="researchDate" class="block text-sm font-medium text-gray-700 mb-1">Date*</label>
-                        <input wire:model="researchDate" type="date" id="researchDate" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" required>
+                        <input wire:model="date" type="date" id="researchDate" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" required>
                         <div id="researchDateError" class="text-red-500 text-sm mt-1 hidden">Please enter a valid Date</div>
+                        @error('date') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
+                    
 
                     <div>
-                        <a href="/register" 
+                        <button 
                            type="submit"
                            id="joinOtherResearchBtn"
                            class="flex justify-center w-full mt-4 py-3 px-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors">
                             Continue
-                        </a>
+                        </button>
                     </div>
                     <a href="/register" class="text-blue-500 flex justify-end">Skip</a>
                 </form>

@@ -1,7 +1,7 @@
 <div>
     <livewire:components.navbar />
 
-    <div id="connection" class="container mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 p-4">
+    <div class="container mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 p-4">
             <div class="max-w-md w-full rounded-xl shadow-xl my-10 p-4 md:p-8">
                 <div class="text-center mb-6">
                     <h2 class="text-2xl font-bold text-blue-800">Join with other researcher</h2>
@@ -15,38 +15,38 @@
 
                 <form class="space-y-4" wire:submit.prevent="submit">
                     <div>
-                        <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
                         <input 
                             type="text" 
-                            id="fullName" 
-                            wire:model="fullName" 
+                            id="name" 
+                            wire:model="name" 
                             class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" 
                             placeholder="Enter your full name" 
                             autocomplete="name"
                         >
-                        @error('fullName') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
+                        @error('name') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
                     </div>
 
                     <div>
                         <label for="instituteEmail" class="block text-sm font-medium text-gray-700 mb-1">Institute Email*</label>
                         <input 
                             type="email" 
-                            id="instituteEmail" 
-                            wire:model="instituteEmail" 
+                            id="email" 
+                            wire:model="email" 
                             class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" 
-                            placeholder="Enter your institute email" 
+                            placeholder="Enter your email" 
                             autocomplete="email"
                         >
-                        @error('instituteEmail') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
+                        @error('email') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
                     </div>
 
                     <div>
-                        <label for="otherPassword" class="block text-sm font-medium text-gray-700 mb-1">Password*</label>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password*</label>
                         <div class="relative">
                             <input 
                                 type="password" 
-                                id="otherPassword" 
-                                wire:model="otherPassword" 
+                                id="password" 
+                                wire:model="password" 
                                 class="w-full p-3 border border-gray-300 rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" 
                                 placeholder="Create a password"
                             >
@@ -58,35 +58,31 @@
                                 <i id="passwordIcon" class="fa-solid fa-eye"></i>
                             </button>
                         </div>
-                        @error('otherPassword') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
+                        @error('password') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
                     </div>
 
                     <div>
                         <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone*</label>
                         <input 
-                            type="tel" 
+                            type="text" 
                             id="phone" 
                             wire:model="phone" 
                             class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out" 
                             placeholder="Enter your phone number" 
-                            inputmode="numeric" 
-                            autocomplete="tel"
                         >
                         @error('phone') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="flex items-start gap-2">
+                    <!-- <div class="flex items-start gap-2">
                         <input 
                             type="checkbox" 
                             id="policyagreement" 
-                            wire:model="policyagreement" 
                             class="h-4 w-4 text-blue-900 border-gray-300 rounded mt-1"
                         >
                         <label for="policyagreement" class="text-sm text-gray-600">
                             I agree to <a href="#" class="text-blue-600 hover:underline">privacy policy & terms</a>
                         </label>
-                    </div>
-                    @error('policyagreement') <div class="text-red-500 text-sm mt-1">{{ $message }}</div> @enderror
+                    </div> -->
 
                     <button 
                         type="submit" 

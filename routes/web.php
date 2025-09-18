@@ -14,11 +14,12 @@ use App\Http\Controllers\Auth\AddResearchController;
 use App\Livewire\Auth\Conduct;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
+use App\Livewire\Homepage\Search;
 
-// Route::get('/', Crud::class)->name('home');
+Route::get('/', Search::class)->name('home');
 Route::get('/login', Login::class)->name('login');
 Route::get('/conduct', Conduct::class)->name('conduct');
-Route::get('/register', Register::class)->name('register');
+Route::get('/register/{user_id}', Register::class)->name('register');
 Route::get('/research',ResearchItems::class)->name('research');
 Route::get('/addresearch',Addresearch::class)->name('addresearch'); 
 Route::get('/question', Question::class)->name('question');
