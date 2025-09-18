@@ -17,12 +17,12 @@
 
             <div class="flex items-center space-x-2">
                 <a href="/login" class="px-4 py-1 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-50 text-sm">Login</a>
-                <a href="/conduct" class="px-4 py-1 border bg-blue-600 rounded-lg border-blue-600 text-white hover:bg-blue-500 text-sm">Register</a>
+                <a href="/connection" class="px-4 py-1 border bg-blue-600 rounded-lg border-blue-600 text-white hover:bg-blue-500 text-sm">Register</a>
             </div>
         </nav>
 
-        <nav class="bg-blue-200 shadow-md">
-            <div class="container mx-auto flex items-center justify-between py-3 px-4">
+        <nav class="bg-white shadow-md">
+            <div class="container bg-blue-200 mx-auto flex items-center justify-between py-3 px-4">
                 <div class="flex items-center space-x-3">
                     <img src="/images/ITC-logo.png" alt="ITC Logo" class="h-12"> 
                     <img src="/images/RIC-logo.png" alt="RIC Logo" class="h-12"> 
@@ -56,9 +56,9 @@
 
         <div class="relative h-[350px] w-auto bg-cover bg-center" style="background-image: url('/images/cover.jpg');">
              <div class="absolute inset-0 bg-black opacity-10"></div>
-             <div class="relative h-full flex items-center  text-white">
-                 <div class="flex justify-start items-center">
-                     <img src="/images/RIC-logo.png" alt="RIC Logo" class="h-64 mb-4"> 
+             <div class="relative h-full flex align-center  text-white">
+                 <div class="flex align-items-center">
+                     <img class="flex align-center" src="/images/RIC-logo.png" alt="RIC Logo" class="h-16 mb-4"> 
                      <!-- <p class="text-white text-lg text-center max-w-3xl">
                          Welcome to our Research and Innovation Center. We are dedicated to advancing knowledge and fostering innovation through cutting-edge research and collaboration.
                      </p> -->

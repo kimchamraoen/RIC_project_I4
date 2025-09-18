@@ -92,6 +92,7 @@
                 </form>
             </div>
         </div>
+    </form>
 
-        <livewire:components.footer />
+    <livewire:components.footer />
 </div>

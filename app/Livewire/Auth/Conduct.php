@@ -44,10 +44,17 @@ class Conduct extends Component
     $user->date = $this->date;
     $user->save();
 
-    // Redirect to the registration page with the new user's ID
-    return redirect()->route('register', ['user_id' => $user->id])
-        ->with('success', 'Profile information saved. Please complete the final step.');
-}
+    // Check if user_id is present
+        if ($user->id) {
+            // Redirect to the registration page with the new user's ID
+            return redirect()->route('register_with_user_id', ['user_id' => $user->id])
+                ->with('success', 'Profile information saved. Please complete the final step.');
+        } else {
+            // Redirect to the standard registration page (optional)
+            return redirect()->route('register')
+                ->with('success', 'Profile information saved. Please complete the final step.');
+        };
+    }
 
     public function render()
     {

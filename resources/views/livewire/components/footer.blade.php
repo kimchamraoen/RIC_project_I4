@@ -47,11 +47,11 @@
                     Thank you for your message! We'll get back to you soon.
                 </div>
 
-                <form id="contactForm" novalidate >
+                <form id="contactForm" novalidate class="">
                     <div>
                         <input id="title" name="title" type="text" placeholder="Title" required minlength="2"
                                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <div class="text-red-500 text-sm min-h-[1em]"></div>
+                        <div class="text-red-500 text-sm mt-1 min-h-[1em]"></div>
                     </div>
 
                     <div>
@@ -81,7 +81,7 @@
                     <div>
                         <textarea id="message" name="message" placeholder="How can we help you?" required minlength="5" rows="4"
                                   class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                        <div class="text-red-500 text-sm min-h-[1em]"></div>
+                        <div class="text-red-500 text-sm mt-1 min-h-[1em]"></div>
                     </div>
 
                     <button type="submit" class="w-full px-5 py-2 mt-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition">
@@ -91,95 +91,4 @@
             </div>
         </div>
     </footer>
-
-
-    <!-- <script>
-        (function () {
-            const form = document.getElementById('contactForm');
-            const success = document.getElementById('successMessage');
-
-            function setError(input, message) {
-                input.classList.add('border-red-500', 'ring-2', 'ring-red-200');
-                input.classList.remove('border-gray-300');
-                const errorEl = input.nextElementSibling;
-                if (errorEl && errorEl.classList.contains('text-red-500')) {
-                    errorEl.textContent = message || '';
-                }
-            }
-
-            function clearError(input) {
-                input.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
-                input.classList.add('border-gray-300');
-                const errorEl = input.nextElementSibling;
-                if (errorEl && errorEl.classList.contains('text-red-500')) {
-                    errorEl.textContent = '';
-                }
-            }
-
-            function validateField(input) {
-                const value = input.value.trim();
-
-                if (input.hasAttribute('required') && !value) {
-                    setError(input, 'This field is required');
-                    return false;
-                }
-                
-                if (input.type === 'email' && value) {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(value)) {
-                        setError(input, 'Please enter a valid email address');
-                        return false;
-                    }
-                }
-                
-                if (input.pattern && value) {
-                    const pattern = new RegExp(input.pattern);
-                    if (!pattern.test(value)) {
-                        setError(input, 'Please enter a valid value');
-                        return false;
-                    }
-                }
-                
-                if (input.hasAttribute('minlength') && value) {
-                    const min = parseInt(input.getAttribute('minlength'), 10) || 0;
-                    if (value.length < min) {
-                        setError(input, `Please enter at least ${min} characters`);
-                        return false;
-                    }
-                }
-
-                clearError(input);
-                return true;
-            }
-
-            form.querySelectorAll('input, textarea').forEach(el => {
-                el.addEventListener('blur', () => validateField(el));
-                el.addEventListener('input', () => {
-                    if (el.classList.contains('border-red-500')) validateField(el);
-                });
-            });
-
-            form.addEventListener('submit', function (e) {
-                let isValid = true;
-                
-                form.querySelectorAll('input, textarea').forEach(input => {
-                    if (!validateField(input)) {
-                        isValid = false;
-                    }
-                });
-                
-                e.preventDefault(); 
-                
-                if (!isValid) {
-                    success.classList.add('hidden');
-                    return;
-                }
-
-                success.classList.remove('hidden');
-                setTimeout(() => { success.classList.add('hidden'); }, 5000);
-                form.reset();
-                form.querySelectorAll('input, textarea').forEach(clearError);
-            });
-        })();
-    </script> -->
 </div>
