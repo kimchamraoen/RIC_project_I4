@@ -30,20 +30,3 @@ Route::get('/register/{user_id}', Register::class)->name('register_with_user_id'
 // Route::get('/research',ResearchItems::class)->name('research');
 // Route::get('/addresearch',Addresearch::class)->name('addresearch'); 
 // Route::get('/question', Question::class)->name('question');
-//Route::get('/dashboard', function () {
-   // return view('dashboard');
-//})->middleware(['auth'])->name('dashboard');
-//Route::get('/email/verify/{id}/{hash}', [\App\Http\Controllers\Auth\VerificationController::class, 'verify'])
-   // ->middleware(['auth', 'signed'])
-   // ->name('verification.verify');
-//Route::get('/confirm-password', [\App\Http\Controllers\Auth\ConfirmPasswordController::class, 'show'])
-    //->middleware('auth')
-    //->name('password.confirm');
-
-//Route::get('/forgot-password', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'show'])
-    //->name('password.request');
-
-//Route::get('/reset-password/{token}', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'show'])
-    //->name('password.reset');//
-
-
