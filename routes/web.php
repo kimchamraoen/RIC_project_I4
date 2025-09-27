@@ -18,6 +18,7 @@ use App\Livewire\Auth\Conduct;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Homepage\Search;
+use App\Livewire\UserProfile\Profile;
 
 Route::get('/', Search::class)->name('home');
 Route::get('/login', Login::class)->name('login');
@@ -30,3 +31,4 @@ Route::get('/register/{user_id}', Register::class)->name('register_with_user_id'
 // Route::get('/research',ResearchItems::class)->name('research');
 // Route::get('/addresearch',Addresearch::class)->name('addresearch'); 
 // Route::get('/question', Question::class)->name('question');
+Route::get('/profile', Profile::class)->name('profile');
