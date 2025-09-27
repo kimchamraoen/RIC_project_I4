@@ -31,4 +31,3 @@ Route::get('/register/{user_id}', Register::class)->name('register_with_user_id'
 // Route::get('/research',ResearchItems::class)->name('research');
 // Route::get('/addresearch',Addresearch::class)->name('addresearch'); 
 // Route::get('/question', Question::class)->name('question');
-Route::get('/profile', Profile::class)->name('profile');
