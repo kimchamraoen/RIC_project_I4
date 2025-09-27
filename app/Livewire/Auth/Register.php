@@ -11,14 +11,13 @@ class Register extends Component
     public $name, $phone, $user;
     public $email;
     public $password;
-    // public $confirm_password;
 
-     public function resetField()
+    // You should use this method only to clear the form fields
+    public function resetField()
     {
         $this->name = '';
         $this->email = '';
         $this->password = '';
-        // $this->confirm_password = '';
         $this->phone = '';
     }
 
@@ -28,7 +27,8 @@ class Register extends Component
             $this->user = User::find($user_id);
             if (!$this->user) {
                 session()->flash('error', 'User not found.');
-                return redirect()->route('some.error.route'); // Handle user not found
+                // You should handle this case by redirecting to a proper route
+                return redirect()->route('login');
             }
             // Pre-fill form fields if user exists
             $this->name = $this->user->name;
@@ -37,7 +37,6 @@ class Register extends Component
         } else {
             $this->user = new User(); // Create a new instance for new users
         }
-        $this->resetField();
     }
 
     public function submit()
@@ -45,13 +44,13 @@ class Register extends Component
         // Validate the input data from the registration form
         $this->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . ($this->user ? $this->user->id : 'NULL'),
-            // 'password' => 'required|string|min:8|confirmed',
+            'email' => 'required|email|max:255|unique:users,email,' . ($this->user->id ?? 'NULL'),
+            'password' => 'required|string|min:8',
             'phone' => 'string|nullable',
         ]);
 
         // Update or create user based on presence of user_id
-        if ($this->user) {
+        if ($this->user->id) {
             $this->user->name = $this->name;
             $this->user->email = $this->email;
             if ($this->password) {
@@ -68,7 +67,7 @@ class Register extends Component
             ]);
         }
 
-        // Reset the form fields after successful registration
+        // Reset the form fields after successful submission
         $this->resetField();
 
         // Redirect the user to the login route with a success message
