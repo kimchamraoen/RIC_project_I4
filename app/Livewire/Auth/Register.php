@@ -37,6 +37,8 @@ class Register extends Component
         } else {
             $this->user = new User(); // Create a new instance for new users
         }
+
+        $this->resetField();
     }
 
     public function submit()

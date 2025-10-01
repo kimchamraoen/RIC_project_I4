@@ -2,146 +2,95 @@
 
 namespace App\Livewire\UserProfile;
 
+use App\Models\Affiliation;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\ProfileInformation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class AffiliationComponent extends Component
 {
-    // Important: Include the WithFileUploads trait to enable file handling
     use WithFileUploads;
 
-    public $profileInformation;
-    public $institution;
-    public $location;
-    public $degree;
-    public $department;
-    public $newImage; 
-    
-    // Stores the path of the existing image (loaded from DB column 'image')
-    public $currentImagePath; 
+    // Public properties
+    public Affiliation $affiliation; 
+    public $uploadedImageFile; // Temporary property for the file upload input
+    public $showModal = false; // Used for initial state if not relying fully on Alpine
 
-    // Modal state
-    public $showModal = false;
+    // Define validation rules for model binding and file upload
+    protected $rules = [
+        'affiliation.institution' => 'nullable|string|max:255',
+        'affiliation.location'    => 'required|string|max:255',
+        'affiliation.degree'      => 'required|string|max:255',
+        'affiliation.department'  => 'nullable|string|max:255',
+        'uploadedImageFile'       => 'nullable|image|max:1024', // Max 1MB image
+    ];
 
+    /**
+     * Initializes the component, guaranteeing $this->affiliation is always an object.
+     */
     public function mount()
     {
-        // 1. Fetch or create the profile information record for the authenticated user
-        $this->profileInformation = ProfileInformation::firstOrCreate(
-            ['user_id' => Auth::id()],
-            []
+        $user = Auth::user();
+        
+        // Use firstOrCreate to ensure an Affiliation record exists for the user.
+        $this->affiliation = Affiliation::firstOrCreate(
+            ['user_id' => $user->id],
+            [ 
+                'institution' => $user->institution ?? 'N/A',
+                'location' => $user->faculty ?? 'N/A', 
+                'degree' => $user->department ?? 'N/A',
+                'department' => $user->department ?? 'N/A',
+                'newImage' => 'default_image.png',
+            ]
         );
-
-        // 2. Load existing data into component properties
-        $this->loadData();
     }
-
+    
     /**
-     * Loads the latest data from the model into the component's public properties.
+     * Dispatches the event to open the modal (handled by Alpine).
      */
-    private function loadData()
+    public function openEditModal()
     {
-        // Ensure the profile model is refreshed
-        $this->profileInformation->refresh();
-        
-        // Removed: $this->name = $this->profileInformation->name;
-        $this->institution = $this->profileInformation->institution;
-        $this->location = $this->profileInformation->location;
-        $this->degree = $this->profileInformation->degree;
-        $this->department = $this->profileInformation->department;
-        // Load the stored path from the 'newImage' database column
-        $this->currentImagePath = $this->profileInformation->newImage; 
-    }
-
-    public function openModal()
-    {
-        $this->loadData();
-        $this->reset('newImage'); // Clear the file input state
-        $this->resetValidation();
-        $this->showModal = true;
-        $this->dispatch('show-affiliations-modal'); // Re-dispatch event to ensure Alpine state is synced
+        // Refresh the component state just in case, then open modal
+        $this->mount();
+        $this->dispatch('show-affiliation-modal');
     }
 
     /**
-     * Closes the edit modal.
-     */
-    public function closeModal()
-    {
-        $this->showModal = false;
-        $this->resetValidation(); 
-        $this->dispatch('hide-affiliations-modal');
-    }
-
-    /**
-     * Handles the removal of the current profile image.
-     */
-    public function removeImage()
-    {
-        // 1. Delete the file from storage if a path exists
-        if ($this->currentImagePath) {
-            // Ensure we delete from the 'public' disk
-            Storage::disk('public')->delete($this->currentImagePath);
-        }
-        
-        // 2. Clear the database entry and component properties
-        // Update the 'newImage' column to null
-        $this->profileInformation->update(['newImage' => null]);
-        $this->currentImagePath = null;
-        $this->newImage = null; // Also clear any pending upload
-
-        // Dispatch success message
-        session()->flash('success', 'Profile image removed.');
-        $this->dispatch('show-toast', ['message' => 'Profile image removed.', 'type' => 'info']);
-    }
-
-    /**
-     * Validates the form data, handles the image upload, and saves all changes.
+     * Validates and saves the affiliation data and handles image upload.
      */
     public function save()
     {
-        // Use attribute validation based on #[Rule] properties.
-        $this->validate(); 
-
-        // Prepare data for the database update
-        $data = [
-            // Removed 'name' => $this->name,
-            'institution' => $this->institution,
-            'location' => $this->location,
-            'degree' => $this->degree,
-            'department' => $this->department,
-        ];
-
-        // 1. Handle New Image Upload
-        if ($this->newImage) {
-            // Delete old image if it exists
-            if ($this->currentImagePath) {
-                Storage::disk('public')->delete($this->currentImagePath);
+        // 1. Validate all properties
+        $this->validate();
+        
+        // 2. Handle image upload and deletion of old image
+        if ($this->uploadedImageFile) {
+            
+            // Delete old image if it exists and is not the default placeholder
+            $currentImagePath = $this->affiliation->newImage;
+            if ($currentImagePath && $currentImagePath !== 'default_image.png' && Storage::disk('public')->exists($currentImagePath)) {
+                Storage::disk('public')->delete($currentImagePath);
             }
             
-            // Store new image and get the path (e.g., 'profile-images/unique-hash.jpg')
-            $path = $this->newImage->store('profile-images', 'public');
-            // Save the path to the 'newImage' database column
-            $data['newImage'] = $path;
-            
-        } elseif ($this->currentImagePath === null && $this->profileInformation->newImage) {
-            // This ensures the image field is explicitly nullified if it was removed before save.
-             $data['newImage'] = null;
+            // Store the new image and update the model's property
+            $this->affiliation->newImage = $this->uploadedImageFile->store('images', 'public');
         }
+        
+        // 3. Save the model. Since $this->affiliation is model-bound, 
+        // the text fields are already updated before save() is called.
+        $this->affiliation->save();
+        
+        // 4. Clean up and notify
+        $this->uploadedImageFile = null;
 
-        // 2. Update Profile Information
-        $this->profileInformation->update($data);
-        
-        // 3. Update component state and close modal
-        $this->loadData();
-        $this->closeModal();
-        
-        // Dispatch event for a toast notification (assuming you have a listener setup)
-        session()->flash('success', 'Profile and affiliations updated successfully!');
-        $this->dispatch('show-toast', ['message' => 'Profile and affiliations updated successfully!', 'type' => 'success']);
+        $this->dispatch('hide-affiliation-modal'); 
+        $this->dispatch('show-toast', ['message' => 'Affiliation updated successfully!', 'type' => 'success']);
     }
 
+    /**
+     * Render the component view.
+     */
     public function render()
     {
         return view('livewire.user-profile.affiliation-component');
