@@ -4,7 +4,6 @@ namespace App\Livewire\UserProfile;
 
 use Livewire\Component;
 use function view;
-use function storage_path;
 use App\Models\ProfileInformation;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
@@ -23,53 +22,60 @@ class ProfileInfo extends Component
     public $institution;
     public $location;
     public $degree;
-    public $image;
-    public $newImage;
+    public $image; // Holds the current persisted image path
+    public $newImage; // Holds the temporary uploaded image
+
+    // Optional: Add a listener to force refresh if needed by other components (unlikely to fix full refresh)
+    protected $listeners = ['refreshComponent' => '$refresh'];
 
     public function mount()
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    // Debugging log to check user details
-    logger()->info('Authenticated User:', [
-        'id' => $user->id,
-        'institution' => $user->institution,
-        'faculty' => $user->faculty,
-        'department' => $user->department,
-    ]);
+        // 1. Find or create the profile record.
+        // firstOrCreate ensures the profile is only seeded with Auth::user() data once.
+        // On subsequent loads, it retrieves the existing record with all saved edits.
+        $this->profileInformation = ProfileInformation::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+                // These defaults are only used if the profile is brand new.
+                'name' => $user->name ?? '',
+                'institution' => $user->institution ?? '',
+                'location' => $user->faculty ?? '',
+                'degree' => $user->department ?? '',
+                'image' => 'default_profile.png', // Ensure a default path is saved immediately
+            ]
+        );
 
-    // Find or create the profile
-    $this->profileInformation = ProfileInformation::updateOrCreate(
-        ['user_id' => $user->id],
-        [
-            'name' => $user->name ?? '',
-            'institution' => $user->institution ?? '',
-            'location' => $user->faculty ?? '', // You might want to adjust this if needed
-            'degree' => $user->department ?? '',
-            'image' => 'default_profile.png'
-        ]
-    );
+        // 2. Assign properties from the database model (which now holds the latest saved data)
+        $this->name = $this->profileInformation->name;
+        $this->institution = $this->profileInformation->institution;
+        $this->location = $this->profileInformation->location;
+        $this->degree = $this->profileInformation->degree;
+        // CRITICAL: Initialize $this->image from the DB, using a default if necessary
+        $this->image = $this->profileInformation->image ?: 'default_profile.png';
 
-    // Assign properties
-    $this->name = $this->profileInformation->name;
-    $this->institution = $this->profileInformation->institution;
-    $this->location = $this->profileInformation->location;
-    $this->degree = $this->profileInformation->degree;
-    $this->image = $this->profileInformation->image ?: 'default_profile.png';
-}
+        // Debugging log to check user details
+        logger()->info('Authenticated User Profile Loaded:', [
+            'user_id' => $user->id,
+            'db_name' => $this->name,
+            'db_image' => $this->image,
+        ]);
+    }
 
     public function openEditModal($section, $id = null)
     {
         $this->editingSection = $section;
         $this->editingId = $id;
 
-        // Pre-populate the form
+        // Pre-populate the form fields with current persisted data
         if ($section === 'profileInformation') {
             $this->name = $this->profileInformation->name;
             $this->institution = $this->profileInformation->institution;
             $this->location = $this->profileInformation->location;
             $this->degree = $this->profileInformation->degree;
-            $this->image = $this->profileInformation->image ?: 'default_profile.png'; // Ensure it has a default value
+            $this->image = $this->profileInformation->image ?: 'default_profile.png';
+            $this->newImage = null; // Clear any previous temporary file
         }
 
         $this->dispatch('show-modal');
@@ -87,34 +93,42 @@ class ProfileInfo extends Component
 
         $this->validate($rules);
 
+        $currentImagePath = $this->profileInformation->image;
+        $newImagePath = $currentImagePath; // Start with the existing path
+
         if ($this->newImage) {
-            // Use Storage facade for deletion
-            if ($this->image && $this->image !== 'default_profile.png' && Storage::disk('public')->exists($this->image)) {
-                Storage::disk('public')->delete($this->image);
+            // Handle deletion of old image if it exists and is not the default
+            if ($currentImagePath && $currentImagePath !== 'default_profile.png' && Storage::disk('public')->exists($currentImagePath)) {
+                Storage::disk('public')->delete($currentImagePath);
             }
-            $this->image = $this->newImage->store('images', 'public');
+            // Store the new image and get its path
+            $newImagePath = $this->newImage->store('images', 'public');
         }
 
+        // Update the model in the database
         $this->profileInformation->update([
             'name' => $this->name,
             'institution' => $this->institution,
             'location' => $this->location,
             'degree' => $this->degree,
-            'image' => $this->image ?: 'default_profile.png', // Ensure a default image is used if none is uploaded
+            // Use the determined path (new path or existing path)
+            'image' => $newImagePath ?: 'default_profile.png', 
         ]);
         
-        // Refresh the profile information
+        // *** CRITICAL FOR PERSISTENCE & SYNCHRONIZATION ***
+        // 1. Refresh the model instance from the database to get the latest saved state
         $this->profileInformation->refresh();
 
-        // Re-populate the component's public properties for the view
+        // 2. Re-populate the component's public properties from the refreshed model
         $this->name = $this->profileInformation->name;
         $this->institution = $this->profileInformation->institution;
         $this->location = $this->profileInformation->location;
         $this->degree = $this->profileInformation->degree;
-        $this->image = $this->profileInformation->image ?: 'default_profile.png'; // Ensure it has a default value
-
-        // Clear the temporary file upload property
+        $this->image = $this->profileInformation->image; // Use the persisted image path
+        
+        // 3. Clear the temporary file upload property
         $this->newImage = null;
+
 
         $this->dispatch('hide-modal');
         $this->dispatch('show-toast', ['message' => 'Profile updated successfully!', 'type' => 'success']);
@@ -122,6 +136,8 @@ class ProfileInfo extends Component
 
     public function render()
     {
+        // Ensure that the image URL passed to the view is correctly generated
+        // (Assuming you use something like asset() or Storage::url() in your Blade view)
         return view('livewire.user-profile.profile-info');
     }
 }
