@@ -17,7 +17,7 @@
 
             <div class="flex items-center space-x-2">
                 <a href="/login" class="px-4 py-1 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-50 text-sm">Login</a>
-                <a href="/connection" class="px-4 py-1 border bg-blue-600 rounded-lg border-blue-600 text-white hover:bg-blue-500 text-sm">Register</a>
+                <a href="/register" class="px-4 py-1 border bg-blue-600 rounded-lg border-blue-600 text-white hover:bg-blue-500 text-sm">Register</a>
             </div>
         </nav>
 
