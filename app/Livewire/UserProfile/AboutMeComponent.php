@@ -10,8 +10,8 @@ class AboutMeComponent extends Component
 {
     public $aboutMe;
     public $introduction;
-    public $disciplines;
-    public $newDiscipline;
+    public $disciplines = [];
+    // public $newDiscipline;
     public $twitter_profile;
     public $website;
 
@@ -37,24 +37,24 @@ class AboutMeComponent extends Component
     {
         $this->introduction = $this->aboutMe->introduction;
         $this->disciplines = $this->aboutMe->disciplines;
-        $this->newDiscipline = '';
+        // $this->newDiscipline = '';
         $this->twitter_profile = $this->aboutMe->twitter_profile;
         $this->website = $this->aboutMe->website;
     }
 
-    public function addDiscipline()
-    {
-        if ($this->newDiscipline) {
-            $this->disciplines[] = $this->newDiscipline;
-            $this->newDiscipline = '';
-        }
-    }
+    // public function addDiscipline()
+    // {
+    //     if ($this->newDiscipline) {
+    //         $this->disciplines[] = $this->newDiscipline;
+    //         $this->newDiscipline = '';
+    //     }
+    // }
 
-    public function removeDiscipline($index)
-    {
-        unset($this->disciplines[$index]);
-        $this->disciplines = array_values($this->disciplines);
-    }
+    // public function removeDiscipline($index)
+    // {
+    //     unset($this->disciplines[$index]);
+    //     $this->disciplines = array_values($this->disciplines);
+    // }
 
     public function save()
     {
@@ -62,7 +62,7 @@ class AboutMeComponent extends Component
             'introduction' => 'nullable|string|max:500',
             'disciplines' => 'nullable|array',
             'twitter_profile' => 'nullable|string|max:255',
-            'website' => 'nullable|url|max:255',
+            'website' => 'nullable|string|max:255',
         ]);
 
         $this->aboutMe->update($validatedData);

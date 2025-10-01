@@ -3,19 +3,22 @@
     {{-- About Me Display Section --}}
     <div class="bg-white p-6 rounded-lg shadow-sm">
         <div class="flex items-center justify-between">
-            <h2 class="text-lg font-bold mb-3">About me</h2>
+            <h2 class="text-lg font-bold mb-3">Skills</h2>
             {{-- This button dispatches the unique event --}}
-            <button x-data @click="$dispatch('show-about-me-modal')" class="text-blue-600 hover:text-blue-800">
+            <button x-data @click="$dispatch('show-skill-modal')" class="text-blue-600 hover:text-blue-800">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
             </button>
         </div><hr class="border-gray-300">
 
-        @if (is_null($aboutMe->introduction) && empty($aboutMe->disciplines) && is_null($aboutMe->twitter_profile) && is_null($aboutMe->website))
+        @if (is_null($skills->language) && empty($skills->skill))
             <p class="text-gray-500 mt-2">Please fill your information</p>
         @else
-            <p class="text-gray-700 mt-2">{{ $aboutMe->introduction }}</p>  
+            <div class="flex items-start gap-4 mt-4">
+                <p class="text-gray-700 mt-2">{{ is_array($skills->skill) ? implode(', ', $skills->skill) : $skills->skill }}</p>,
+                <p class="text-gray-700 mt-2">{{ $skills->language }}</p>
+            </div>
         @endif
     </div>
 
@@ -23,8 +26,8 @@
     <div x-data="{ show: false }"
          x-show="show"
          {{-- Listen for the unique event dispatched by the button --}}
-         x-on:show-about-me-modal.window="show = true"
-         x-on:hide-about-me-modal.window="show = false"
+         x-on:show-skill-modal.window="show = true"
+         x-on:hide-skill-modal.window="show = false"
          x-on:keydown.escape.window="show = false"
          class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
 
@@ -43,58 +46,49 @@
              x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
              class="relative w-full max-w-lg bg-white rounded-lg shadow-xl overflow-hidden transform transition-all duration-300">
             
-            <form wire:submit.prevent="save">
+            <form wire:submit.prevent="update">
                 <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-xl font-semibold text-gray-800">Edit about me</h3>
+                    <h3 class="text-xl font-semibold text-gray-800">Edit Skill</h3>
                 </div>
 
                 <div class="p-6 space-y-6">
                     <div>
-                        <label for="introduction" class="block text-sm font-medium text-gray-700">Introduction</label>
-                        <textarea id="introduction" wire:model.defer="introduction" rows="4" class="mt-1 block w-full border rounded-md shadow-sm p-2" placeholder="Write a short intro to tell people about yourself."></textarea>
-                        <p class="text-right text-xs text-gray-500">{{ 500 - strlen($introduction) }}/500</p>
-                        @error('introduction') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <div class="mb-4">
-                            <label for="disciplines" class="block text-sm font-medium text-gray-700">Disciplines</label>
-                            <select wire:model="disciplines" id="multiple-select-field" class="border w-full p-2 rounded-md">
-                                    <option value="Computer Engineering">Computer Engineering</option>
-                                    <option value="Computer Science">Computer Science</option>
-                                    <option value="Data Science">Data Science</option>
-                                    <option value="Information Technology">Information Technology</option>
-                                    <option value="Software Engineering">Software Engineering</option>
+                        <label for="skill" class="block text-sm font-medium text-gray-700">Skills</label>
+                        <select wire:model="skill" id="multiple-test" multiple>
+                                    <option value="IT">IT</option>
+                                    <option value="Graphic Design">Graphic Design</option>
+                                    <option value="Software">Software</option>
                                     <option value="Web Development">Web Development</option>
-                                    <option value="Artificial Intelligence">Artificial Intelligence</option>
-                                    <option value="Machine Learning">Machine Learning</option>
+                                    <option value="Data Analysis">Data Analysis</option>
                                     <option value="Cybersecurity">Cybersecurity</option>
                                     <option value="Cloud Computing">Cloud Computing</option>
-                                    <option value="Network Administration">Network Administration</option>
+                                    <option value="AI & Machine Learning">AI & Machine Learning</option>
+                                    <option value="Networking">Networking</option>
                                     <option value="Database Management">Database Management</option>
                                     <option value="DevOps">DevOps</option>
                                     <option value="Mobile App Development">Mobile App Development</option>
+                                    <option value="Project Management">Project Management</option>
                                     <option value="UI/UX Design">UI/UX Design</option>
-                                    <option value="Game Development">Game Development</option>
-                                    <option value="IT Project Management">IT Project Management</option>
-                                    <option value="IT Consulting">IT Consulting</option>
-                            </select>
-                        </div>
+                                    <option value="Digital Marketing">Digital Marketing</option>
+                                    <option value="Content Creation">Content Creation</option>
+                                    <option value="SEO">SEO</option>      
+                        </select>
                     </div>
 
-                    <div>
-                        <label for="twitter_profile" class="block text-sm font-medium text-gray-700">X (formerly Twitter) profile</label>
-                        <input type="text" id="twitter_profile" wire:model.defer="twitter_profile" class="mt-1 block w-full border p-2 rounded-md shadow-sm" placeholder="Enter your profile link or username">
-                        <p class="text-xs text-gray-500 mt-1">Only visible to mutual followers</p>
-                    </div>
-
-                    <div>
-                        <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
-                        <input type="text" id="website" wire:model.defer="website" class="mt-1 block w-full border p-2 rounded-md shadow-sm" placeholder="https://www.example.com">
-                        <p class="text-xs text-gray-500 mt-1">Only visible to mutual followers</p>
+                    {{-- language --}}
+                    <div class="mb-3">
+                        <label for="language" class="block text-sm font-medium text-gray-700">Language</label>
+                        <select id="language" wire:model.defer="language" class="mt-2 block w-full h-10 px-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">Enter your language</option>
+                            <option value="Laravel">Laravel</option>
+                            <option value="Mysql">Mysql</option>
+                            <option value="Graphic">Graphic</option>
+                            <option value="Software">Software</option>
+                        </select>
                     </div>
                 </div>
-
+                
+                {{-- Footer --}}
                 <div class="px-6 py-4 flex justify-end space-x-3 border-t border-gray-200">
                     <button type="button" @click="show = false" class="px-4 py-2 text-gray-700 font-medium bg-gray-100 rounded-md hover:bg-gray-200">
                         Cancel
@@ -114,7 +108,7 @@
 <script>
     function initSelect2() {
         // Your Select2 initialization code
-        $('#multiple-select-field').select2({
+        $('#multiple-test').select2({
             placeholder: "Choose options",
             closeOnSelect: false,
             width: '100%'
