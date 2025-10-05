@@ -30,6 +30,21 @@ class User extends Authenticatable
         'phone',
     ];
 
+    public function profileInformation()
+    {
+        return $this->hasOne(\App\Models\ProfileInformation::class, 'user_id');
+    }
+
+    public function aboutMe()
+    {
+        return $this->hasOne(AboutMe::class,'user_id');
+    }
+
+    public function affiliation()
+    {
+        return $this->hasOne(Affiliation::class,'user_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

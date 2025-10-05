@@ -134,17 +134,62 @@
     
     <hr class="border-gray-300">
     
-    {{-- Bottom Navigation --}}
-    <div class="flex items-center justify-between px-3 py-3">
-        <nav class="flex gap-4">
-            <a class="text-blue-600" aria-current="page" href="{{ route('profile') }}">Profile</a>
-            <a class="text-gray-600" href="#">Research</a>
-            <a class="text-gray-600" href="#">State</a>
-            <a class="text-gray-600" href="#">Following</a>
-            <a class="text-gray-600" href="#">Saved List</a>
+     {{-- Bottom Navigation --}}
+    <div class="flex items-center justify-between px-7 py-3">
+        <nav class="flex gap-7">
+            <a href="{{ route('profile') }}"
+            class="py-2 border-b-2 {{ request()->routeIs('profile') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
+            Profile
+            </a>
+
+            <a href="#"
+            class="py-2 border-b-2 {{ request()->routeIs('research') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
+            Research
+            </a>
+
+            <a href="{{ route('stat') }}"
+            class="py-2 border-b-2 {{ request()->routeIs('stat') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
+            State
+            </a>
+
+            <a href="{{ route('follow') }}"
+            class="py-2 border-b-2 {{ request()->routeIs('follow') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
+            Following
+            </a>
+
+            <!-- <a href="#"
+            class="py-2 border-b-2 {{ request()->routeIs('saved') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
+            Saved List
+            </a> -->
         </nav>
-        <button class="rounded-md bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700">Add Research</button>
-    </div>
-    
-    <hr class="border-gray-300">
+     <!-- <button class="rounded-md bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700">Add Research</button>  -->
+    </div> 
+    <!-- <hr class="border-gray-300"> -->
 </div>
+
+<script>
+    function setActive(el) {
+        document.querySelectorAll('.tab-link').forEach(link => {
+            link.classList.remove('text-blue-600', 'border-blue-600');
+            link.classList.add('text-gray-600', 'border-transparent');
+        });
+
+        el.classList.add('text-blue-600', 'border-blue-600');
+        el.classList.remove('text-gray-600', 'border-transparent');
+    }
+
+    // add click event to all links
+    document.querySelectorAll('.tab-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+            // prevent jump for demo (remove this if you want normal link navigation)
+            // e.preventDefault();
+            setActive(this);
+        });
+    });
+
+    // set default active (Profile)
+    document.addEventListener('DOMContentLoaded', () => {
+        const first = document.querySelector('.tab-link');
+        if (first) setActive(first);
+    });
+</script>

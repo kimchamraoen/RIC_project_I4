@@ -1,10 +1,85 @@
-<div class="bg-gray-100">
-    <livewire:researcher.profiles />
+<div class="bg-gray-200 h-full min-h-screen">
+    <!-- -------------------other user navbar----------------------- -->
+    <div>
+        <livewire:components.navbar_user />
+    </div>
 
-    <div class="flex h-auto bg-gray-100 px-64 justify-center">
-        <div class="w-64 bg-white shadow-lg mt-8 h-120">
+    <!-- -------------------------profile other user---------------- -->
+    <div class="bg-white shadow-sm rounded-md mx-5 mb-5 mt-1">
+        <div>
+            <div class=" mx-auto bg-white shadow-xl rounded-lg p-6 sm:p-8">
+                {{-- Header Section --}}
+                <div class="flex items-start space-x-10 px-32 ">
+                    {{-- Profile Picture --}}
+                    <div class="flex-shrink-0">
+                        {{-- Replace with your Livewire image upload/display logic or a static asset --}}
+                        <img class="h-32 w-32 rounded-full object-cover" 
+                            src="{{ asset('storage/' . ($this->profileInfo->image ?? 'default/avatar.png')) }}"  
+                            alt="Profile Picture">
+                    </div>
+
+                    {{-- Profile Details --}}
+                    <div class="flex-grow">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-4 mt-1">
+                            {{ $profileInfo->name }}
+                        </h1>
+                        <div class="flex">
+                            <p class="text-mg text-gray-600">
+                                {{ $affiliation->degree }}
+                            </p>
+                            <p class="text-mg text-gray-600 mx-2">at</p>
+                            <p class="text-mg text-gray-600">{{ $affiliation->institution }}</p>
+                        </div>
+                        <div>
+                            <p class="text-mg text-gray-600">{{$affiliation->location}}</p>
+                        </div>
+
+                        {{-- Stats Line --}}
+                        <div class="flex items-center space-x-8 mt-4 text-sm">
+                            {{-- Stat Item 1 --}}
+                            <div class="flex items-center text-gray-600">
+                                <p class="mr-2">Research Interested Score</p>
+                                <span class="text-xl font-semibold text-gray-900">
+                                    {{-- Livewire/Blade Data: $researcher->research_score --}}
+                                    0
+                                </span>
+                                <span class="ml-7">|</span>
+                            </div>
+                            
+                            {{-- Stat Item 2 --}}
+                            <div class="flex items-center text-gray-600">
+                                <p class="mr-2">Citations</p>
+                                <span class="text-xl font-semibold text-gray-900">
+                                    {{-- Livewire/Blade Data: $researcher->citations --}}
+                                    0
+                                </span>
+                                <span class="ml-7">|</span>
+                            </div>
+
+                            {{-- Stat Item 3 --}}
+                            <div class="flex items-center text-gray-600">
+                                <p class="mr-2">H-index</p>
+                                <span class="text-xl font-semibold text-gray-900">
+                                    {{-- Livewire/Blade Data: $researcher->h_index --}}
+                                    0
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="border-gray-300 mt-5">
+
+                <livewire:components.other-user-navigate-page :user="$user" />
+            
+            </div>
+        </div>
+    </div>
+
+    <!-- --------------------body research------------------ -->
+    <div class="grid h-auto grid-cols-6 gap-[-2rem] justify-center px-50">
+        <div class="w-64 bg-white shadow-lg h-120 col-span-2 rounded-lg">
             <div class="p-4 border-b">
-            <h2 class="text-xl font-bold text-gray-800">Research</h2>
+                <h2 class="text-xl font-bold text-gray-800">Research</h2>
             </div>
             <nav class="mt-2">
                 <a href="#" class="flex items-center justify-between p-4 text-gray-700 hover:bg-gray-100">
@@ -40,7 +115,7 @@
             </nav>
         </div>
 
-        <div class="flex-1 p-8 overflow-y-4">
+        <div class="flex-1 w-auto col-span-4 mb-10">
             <div class="p-6 bg-white rounded-lg shadow">
             <h3 class="text-lg font-semibold text-gray-800">Research Items</h3>
             <div class="relative mt-4">

@@ -17,18 +17,26 @@ use App\Http\Controllers\Auth\AddResearchController;
 use App\Livewire\Auth\Conduct;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
+use App\Livewire\Home;
 use App\Livewire\Homepage\Search;
+use App\Livewire\Logout;
+use App\Livewire\OtherUserProfile\Follower;
+use App\Livewire\OtherUserProfile\Profiles;
+use App\Livewire\OtherUserProfile\Stat;
+use App\Livewire\Researcher\Research;
 use App\Livewire\UserProfile\Profile;
 use App\Livewire\Research\Iterms;
 
+use App\Livewire\UserProfile\UserProfilePage;
+use App\Livewire\UserProfileStateFollow\Follow;
+use App\Livewire\UserProfileStateFollow\State;
+use App\Models\User;
 
-Route::get('/', Search::class)->name('home');
+Route::get('/', Search::class)->name('nonLogin');
 Route::get('/login', Login::class)->name('login');
 Route::get('/conduct', Conduct::class)->name('conduct');
-// Route for standard registration (without user_id)
 Route::get('/register', Register::class)->name('register');
-
-// Route for registration with user_id
+Route::get('/logout', Logout::class)->name('logout');
 Route::get('/register/{user_id}', Register::class)->name('register_with_user_id');
 // Route::get('/addresearch',Addresearch::class)->name('addresearch'); 
 // Route::get('/question', Question::class)->name('question');
@@ -39,3 +47,11 @@ Route::get('/question', Question::class)->name('question');
 // Route::get('/secondadd', Secondformadd::class)->name('secondadd');
 Route::get('/research/{researchId}/details',Secondformadd::class)->name('research.secondform');
 
+Route::get('/profile', Profile::class)->name('profile');
+Route::get('/follow', Follow::class)->name('follow');
+Route::get('/stat', State::class)->name('stat');
+Route::get('/home', Home::class)->name('home');
+Route::get('/profile/{user}', Profiles::class)->name('user-profile'); 
+Route::get('/profile/{user}/stat', Stat::class)->name('user-stat');
+Route::get('/profile/{user}/research', Research::class)->name('user-research');
+Route::get('/profile/{user}/follower', Follower::class)->name('user-follower');
