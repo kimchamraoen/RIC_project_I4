@@ -1,6 +1,7 @@
 <div class="container mt-5">
     <h2 class="text-center">Register</h2>
     <form wire:submit.prevent='submit' class="justify-content-center font-bold">
+        @csrf
         <div class="mb-3">
             <label for="exampleInputName" class="form-label">Name</label>
             <input wire:model='name' type="text" class="form-control" id="exampleInputName" aria-describedby="nameHelp">
