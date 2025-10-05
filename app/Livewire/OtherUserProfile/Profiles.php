@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Livewire\Researcher;
+namespace App\Livewire\OtherUserProfile;
 
 use App\Livewire\UserProfile\ProfileInfo;
+use App\Models\AboutMe;
 use App\Models\Affiliation;
+use App\Models\ProfileInformation;
 use App\Models\User;
 use Livewire\Component;
 
-class Research extends Component
+class Profiles extends Component
 {
     public User $user;
     public $profileInfo; 
-    // public $aboutMe;
+    public $aboutMe;
     public $affiliation;
 
     public function mount(User $user)
@@ -20,12 +22,13 @@ class Research extends Component
 
         // NOTE: $user->profile must match the relationship name on your User model.
         $this->profileInfo = $user->profileInformation ?? new ProfileInfo(); 
-        // $this->aboutMe = $user->aboutMe ?? new AboutMe();
+        $this->aboutMe = $user->aboutMe ?? new AboutMe();
         $this->affiliation = $user->affiliation ?? new Affiliation();
     }
-
+    
+    
     public function render()
     {
-        return view('livewire.researcher.research');
+        return view('livewire.other-user-profile.profiles');
     }
 }

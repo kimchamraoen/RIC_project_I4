@@ -1,30 +1,11 @@
 <div class="bg-gray-200 h-full min-h-screen">
-    <div>
-        <livewire:components.navbar_user />
-    </div>
+    <livewire:components.navbar-user />
 
-    {{-- Profile Info Section --}}
-    <div class="bg-white shadow-sm rounded-md mx-5 mb-6 mt-1">
-        <livewire:user-profile.profile-info />
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mt-8 max-w-7xl mx-50 px-4 sm:px-6 lg:px-8 mb-10">
         <div class="flex flex-col gap-6 col-span-3">
-            <livewire:user-profile.about-me-component />
-            <livewire:user-profile.affiliation-component />
-            <livewire:user-profile.skill-component />
-
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <h3 class="mb-5">Enhance your profile by adding more details</h3><hr class="border-gray-300 my-1">
-                <livewire:user-profile.missing-detail-component />
-                <livewire:user-profile.short-introduction-component />
-                <livewire:user-profile.degree-component />
-                <livewire:user-profile.education-component />
-                <livewire:user-profile.editor-role-component />
-                <livewire:user-profile.non-editor-role-component />
-                <livewire:user-profile.grant-component />
-                <livewire:user-profile.member-ship-component />
-                <livewire:user-profile.orcid-component />
+
             </div>
         </div>
         <div class="flex flex-col col-span-2">
@@ -58,5 +39,4 @@
     </div>
 
     <livewire:components.footer />
-    
 </div>

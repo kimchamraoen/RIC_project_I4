@@ -26,7 +26,7 @@ class Login extends Component
 
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
             session()->flash('success', 'Login successful.');
-            return redirect()->route('home');
+            return redirect()->route('profile');
         }else {
             session()->flash('error', 'Invalid email or password.');
         }

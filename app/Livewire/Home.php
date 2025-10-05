@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Livewire\UserProfile;
+namespace App\Livewire;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class Profile extends Component
+class Home extends Component
 {
     public $user;
 
     public function mount()
     {
-        $this->user = Auth::user();
+        $this->user = Auth::user(); 
     }
-    
+
     public function render()
     {
-        return view('livewire.user-profile.profile');
+        return view('livewire.home');
     }
 }
