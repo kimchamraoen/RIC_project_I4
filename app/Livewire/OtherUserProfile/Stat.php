@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Livewire\Researcher;
+namespace App\Livewire\OtherUserProfile;
 
 use App\Livewire\UserProfile\ProfileInfo;
 use App\Models\Affiliation;
 use App\Models\User;
 use Livewire\Component;
 
-class Research extends Component
+class Stat extends Component
 {
     public User $user;
     public $profileInfo; 
@@ -26,6 +26,6 @@ class Research extends Component
 
     public function render()
     {
-        return view('livewire.researcher.research');
+        return view('livewire.other-user-profile.stat');
     }
 }

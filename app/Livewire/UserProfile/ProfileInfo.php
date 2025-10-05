@@ -129,7 +129,7 @@ class ProfileInfo extends Component
         // 3. Clear the temporary file upload property
         $this->newImage = null;
 
-
+        $this->dispatch('profile-updated'); // Dispatch the event
         $this->dispatch('hide-modal');
         $this->dispatch('show-toast', ['message' => 'Profile updated successfully!', 'type' => 'success']);
     }
