@@ -5,6 +5,7 @@ namespace App\Livewire\Research;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Research;
+use Illuminate\Support\Facades\Auth;
 
 class Addresearch extends Component
 {
@@ -12,44 +13,92 @@ class Addresearch extends Component
 
     public $publication_type;
     public $title;
-    public $authors = [];
+    public $authors= [];
     public $day;
     public $month;
     public $year;
     public $file;
+    public $published_at;
+    public $description;
+    public $addReseach;
 
-    protected $rules = [
-        'publication_type' => 'required|string',
-        'title' => 'required|string|max:255',
-        'authors' => 'required|array|min:1',
-        'day' => 'required|integer|min:1|max:31',
-        'month' => 'required|integer|min:1|max:12',
-        'year' => 'required|integer|min:1900',
-       'file' => 'nullable|mimes:pdf|max:5120', // max 5MB
-    ];
+    // public $step = 1;
+
+
+    public function mount()
+    {
+        $this->addReseach = Research::firstOrCreate(
+            ['user_id' => Auth::id()],
+            [
+                'title' => '',  // <--- must include title!
+                'publication_type' => '',
+                'authors' => null,
+                'day' => '',
+                'month' => '',
+                'year' => '',
+                'file_path'=> null,
+            ]
+        );
+
+        $this->title = $this->addReseach->title ?? '';
+        $this->publication_type = $this->addReseach->publication_type ?? '';
+        // $this->authors = $this->addReseach->authors ?? null;
+        $this->authors = $this->addReseach->authors ? (is_array($this->addReseach->authors) 
+        ? $this->addReseach->authors 
+        : json_decode($this->addReseach->authors, true)) 
+        : [];
+        $this->day = $this->addReseach->day ?? '';
+        $this->month = $this->addReseach->month ?? '';
+        $this->year = $this->addReseach->year ?? '';
+        $this->file_path = $this->addReseach->file_path ?? null;
+
+    }
+
+    public function addAuthor($author)
+    {
+        if (!empty($author) && !in_array($author, $this->authors)) {
+            $this->authors[] = $author;
+        }
+    }
+
+    public function removeAuthor($author)
+    {
+        $this->authors = array_filter($this->authors, fn($a) => $a !== $author);
+    }
 
     public function submit()
     {
-        $this->validate();
-
-        $date = sprintf('%04d-%02d-%02d', $this->year, $this->month, $this->day);
-
-        $path = $this->file ? $this->file->store('research_files', 'public') : null;
-
-        Research::create([
-            'publication_type' => $this->publication_type,
-            'title' => $this->title,
-            'authors' => $this->authors,
-            'published_at' => $date,
-            'file_path' => $path,
+        $validatedData = $this->validate([
+            'publication_type' => 'required|string|max:500',
+            'title' => 'required|string|max:255',
+            'authors' => 'nullable|array|min:1',
+            'day' => 'required|string|min:1|max:31',
+            'month' => 'required|string|min:1|max:12',
+            'year' => 'required|string|max:2030',
+            'file' => 'nullable|file|mimes:pdf|max:5120',
         ]);
+        
 
-        session()->flash('success', 'Research submitted successfully!');
-        $this->reset();
+        if ($this->file) { $validatedData['file_path'] = $this->file->store('research_files', 'public');}
+       
+        $validatedData['user_id'] = Auth::id();
+
+        
+        $research = Research::create($validatedData);
+        //  $this->addReseach->create($validatedData);
+        
+       
+        return redirect()->route('research.secondform', ['researchId' => $research->id]);
+
+        session()->flash('message', 'About me information saved successfully!');
+        $this->dispatch('hide-modal');
+
+
     }
 
     public function render()
     {
         return view('livewire.research.addresearch');
+        
     }
 }

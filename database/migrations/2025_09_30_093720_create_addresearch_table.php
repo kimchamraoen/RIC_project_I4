@@ -13,16 +13,21 @@ return new class extends Migration
     {
         Schema::create('addresearch', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('user_id')
+            $table->foreignId('user_id')
                   ->constrained() // default: references id on users
                   ->onDelete('cascade');
             $table->string('publication_type');
             $table->string('title');
-            $table->json('authors');
-            $table->date('published_at');
+            $table->json('authors')->nullable();
+            $table->string('day');
+            $table->string('month');
+            $table->string('year');
             $table->string('file_path')->nullable();
+            $table->text('description');
+            $table->string('file_path2')->nullable();
             $table->timestamps();
         });
+
     }
 
     /**

@@ -11,6 +11,7 @@ use Livewire\Volt\Volt;
 use App\Livewire\Register\ConductResearch;
 use App\Livewire\Register\ConnectionResearcher;
 use App\Livewire\Research\Addresearch;
+use App\Livewire\Research\Secondformadd;
 use App\Livewire\Research\Question;
 use App\Http\Controllers\Auth\AddResearchController;
 use App\Livewire\Auth\Conduct;
@@ -35,3 +36,6 @@ Route::get('/profile', Profile::class)->name('profile');
 Route::get('/iterms', Iterms::class)->name('iterms');
 Route::get('/add', Addresearch::class)->name('add');
 Route::get('/question', Question::class)->name('question');
+// Route::get('/secondadd', Secondformadd::class)->name('secondadd');
+Route::get('/research/{researchId}/details',Secondformadd::class)->name('research.secondform');
+

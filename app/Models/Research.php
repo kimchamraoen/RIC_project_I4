@@ -9,14 +9,9 @@ class Research extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'publication_type',
-        'title',
-        'authors',
-        'published_at',
-        'file_path',
-    ];
+    protected $table = 'addresearch'; // match your table
+    protected $fillable = ['user_id', 'publication_type', 'title', 'authors', 'day', 'month', 'year', 'file_path', 'published_at', 'description',
+        'file_path2',];
 
     protected $casts = [
         'authors' => 'array',
