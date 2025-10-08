@@ -142,8 +142,8 @@
             Profile
             </a>
 
-            <a href="#"
-            class="py-2 border-b-2 {{ request()->routeIs('research') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
+            <a href="{{ route('items')}}"
+            class="py-2 border-b-2 {{ request()->routeIs('items') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
             Research
             </a>
 

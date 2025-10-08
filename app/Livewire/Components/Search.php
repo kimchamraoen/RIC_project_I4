@@ -77,22 +77,4 @@ class Search extends Component
         */
     }
 
-    // public function goToProfile($userId) 
-    // {
-    //     // 1. Find the user (good practice, ensures existence)
-    //     $user = User::find($userId); 
-
-    //     if ($user) {
-    //         // 2. THIS IS THE KEY FIX: Use 'user' as the key to match the {user} route parameter
-    //         return $this->redirectRoute(
-    //             'user-profile', 
-    //             ['user' => $user->id], // The key 'user' matches the route definition '/profile/{user}'
-    //             navigate: true // Likely Livewire navigation
-    //         );
-    //     }
-        
-    //     // Fallback if the user is somehow not found
-    //     session()->flash('error', 'User with ID ' . $userId . ' not found.');
-    //     return;
-    // }
 }

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('month');
             $table->string('year');
             $table->string('file_path')->nullable();
-            $table->text('description');
+            $table->string('description')->nullable();
             $table->string('file_path2')->nullable();
             $table->timestamps();
         });

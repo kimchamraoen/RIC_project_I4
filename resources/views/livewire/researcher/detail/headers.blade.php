@@ -2,9 +2,13 @@
     <div class="p-6 bg-white rounded-lg shadow-md w-auto px-24">
         <div class="flex justify-between items-start">
             <div class="flex-1 pr-4 max-w-200">
-                <h1 class="text-2xl font-bold text-gray-800">The Impact of Organizational and Management variables on the Performance of Sidama Bunna Football Club</h1>
+                <h1 class="text-2xl font-bold text-gray-800">{{ $research->title }}</h1>
                 <p class="mt-2 text-sm text-gray-600">
-                    May 2025<span class="font-semibold text-gray-700">Retos</span> 68:212-223<br>
+                    <div class="flex">
+                        <span class="mr-3">{{ $research->month }}</span>
+                        <span>{{ $research->year }}</span>
+                    </div>
+                    <span class="font-semibold text-gray-700">Retos</span> 68:212-223<br>
                     <span class="text-blue-600">DOI: 10.47197/retos.v68.108943</span><br>
                     <span class="text-gray-500">LicenseCC BY-NC-ND 4.0</span>
                 </p>
