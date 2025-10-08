@@ -1,6 +1,10 @@
 <div class="bg-gray-100">
-    <livewire:researcher.detail.headers />
+    <div>
+        <livewire:components.navbar_user />
+    </div>
 
+    <livewire:researcher.detail.headers />
+    
     <div class="container-lg flex gap-8 mx-64">
         <div class="w-2/3 ">
             <!-- <div class="bg-white rounded-lg shadow-md mb-3 mt-8 border border-gray-200"> -->

@@ -17,12 +17,22 @@ class Addresearch extends Component
     public $day;
     public $month;
     public $year;
-    public $file;
+    public $file, $file_path;
     public $published_at;
     public $description;
     public $addReseach;
 
     // public $step = 1;
+    public function reseted()
+    {
+        $this->title = '';
+        $this->publication_type = '';
+        $this->authors = '';
+        $this->day = '';
+        $this->month = '';
+        $this->year = '';
+        $this->file_path = '';
+    }
 
 
     public function mount()
@@ -52,6 +62,7 @@ class Addresearch extends Component
         $this->year = $this->addReseach->year ?? '';
         $this->file_path = $this->addReseach->file_path ?? null;
 
+        $this->reseted();
     }
 
     public function addAuthor($author)
@@ -75,9 +86,10 @@ class Addresearch extends Component
             'day' => 'required|string|min:1|max:31',
             'month' => 'required|string|min:1|max:12',
             'year' => 'required|string|max:2030',
-            'file' => 'nullable|file|mimes:pdf|max:5120',
+            'file' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ]);
-        
+
+        // $validatedData['authors'] = $this->authors;
 
         if ($this->file) { $validatedData['file_path'] = $this->file->store('research_files', 'public');}
        
@@ -92,8 +104,8 @@ class Addresearch extends Component
 
         session()->flash('message', 'About me information saved successfully!');
         $this->dispatch('hide-modal');
-
-
+        // $this->reseted();
+        // dd($validatedData);
     }
 
     public function render()

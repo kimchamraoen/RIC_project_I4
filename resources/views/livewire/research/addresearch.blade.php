@@ -1,8 +1,9 @@
-<div>
-    <div class="rounded-md mx-5 my-6 ">
-        <livewire:user-profile.profile-info />
+<div class="bg-gray-200 h-auto w-full">
+    <div class="rounded-md mx-5">
+        <livewire:components.navbar-user />
     </div>
-    <div class="container mx-auto px-4 py-4 bg-gray-00">
+
+    <div class=" mx-50 px-4 py-4 bg-gray-00">
         <div class="flex flex-col lg:flex-row justify-center gap-6">
             <!-- Main Form Column -->
             <div class="w-full lg:w-8/12">
@@ -75,7 +76,7 @@
                                                     </div>
                                                 @endforeach
                                             @endif
-                                            <input 
+                                            <input
                                                 id="authorTextInput"
                                                 type="text"
                                                 placeholder="Type author name and press Enter..."
@@ -111,7 +112,7 @@
                                                             'July', 'August', 'September', 'October', 'November', 'December'];
                                                 @endphp
                                                 @foreach($months as $index => $month)
-                                                    <option value="{{ $index + 1 }}">{{ $month }}</option>
+                                                    <option value="{{ $month }}">{{ $month }}</option>
                                                 @endforeach
                                             </select>
                                             @error('month') <span class="text-red-600 text-sm mt-1">{{ $message }}</span> @enderror
@@ -141,10 +142,7 @@
                                         {{ session('success') }}
                                     </div>
                                 @endif
-                            </form>
-                        
-
-                       
+                        </form>
                     </div>
                 </div>
             </div>

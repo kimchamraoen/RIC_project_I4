@@ -6,40 +6,62 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Research;
 use Illuminate\Support\Facades\Auth;
+
 class Secondformadd extends Component
 {
     use WithFileUploads;
 
     public $description;
-    public $file;
-    public $researchId;
+    public $file; // Holds the UploadedFile object (new file)
+    public $file_path2; // Holds the file path string (existing file)
+    public $researchId; 
 
-    public function mount($researchId)
+    // Ensure the user is authenticated (security check recommended here)
+    public function mount($researchId) 
     {
-        $this->researchId = $researchId;
-        $research = Research::findOrFail($researchId);
+        if (!Auth::check()) {
+            return redirect('/login');
+        }
 
-        $this->description = $research->description ?? '';
+        // Load the specific record ensuring it belongs to the user
+        $research = Research::where('id', $researchId)
+                            ->where('user_id', Auth::id())
+                            ->firstOrFail();
+        
+        $this->researchId = $research->id;
+
+        $this->description = $research->description ?? null;
+        
+        // 🚨 FIX 1: Correctly read from the local $research variable, not $this->research
+        $this->file_path2 = $research->file_path2 ?? null;
     }
 
-     public function submit()
+    public function submit()
     {
         $this->validate([
-            'description' => 'required|string|max:1000',
+            'description' => 'required|string|max:5000',
             'file' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ]);
 
-        $research = Research::findOrFail($this->researchId);
+        $research = Research::where('id', $this->researchId)
+                            ->where('user_id', Auth::id())
+                            ->firstOrFail();
+        
         $research->description = $this->description;
 
-        if ($this->file) {
-            $research->file_path = $this->file->store('research_files', 'public');
+        // 🚨 FIX 2: Assign the stored path directly to the model instance
+        if ($this->file) { 
+            // Store the file and assign the resulting path string to the model property
+            $research->file_path2 = $this->file->store('research_files', 'public');
         }
+        
+        // If $this->file was null, the existing $research->file_path2 remains unchanged.
+        // If $this->file was set, it now holds the new path.
 
         $research->save();
 
         session()->flash('success', 'Research details uploaded successfully!');
-        return redirect()->route('iterms'); // adjust as needed
+        return redirect()->route('items');
     }
 
     public function render()
