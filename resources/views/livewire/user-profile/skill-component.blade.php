@@ -53,8 +53,8 @@
 
                 <div class="p-6 space-y-6">
                     <div>
-                        <label for="skill" class="block text-sm font-medium text-gray-700">Skills</label>
-                        <select wire:model="skill" id="multiple-test" multiple>
+                        <!-- <label for="skill" class="block text-sm font-medium text-gray-700">Skills</label> -->
+                        <!-- <select wire:model="skill" id="multiple-test" multiple>
                                     <option value="IT">IT</option>
                                     <option value="Graphic Design">Graphic Design</option>
                                     <option value="Software">Software</option>
@@ -72,7 +72,22 @@
                                     <option value="Digital Marketing">Digital Marketing</option>
                                     <option value="Content Creation">Content Creation</option>
                                     <option value="SEO">SEO</option>      
+                        </select> -->
+                        <label for="skill" class="block text-sm font-medium text-gray-700">
+                            Select Disciplines (Hold CTRL/CMD to select multiple):
+                        </label>
+                        <select 
+                            multiple 
+                            id="multiple-test" 
+                            size="5" 
+                            wire:model="skill" 
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        > 
+                            @foreach ($availableDisciplines as $key => $label)
+                                <option value="{{ $key }}">{{ $label }}</option>
+                            @endforeach
                         </select>
+                        @error('skill') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     {{-- language --}}

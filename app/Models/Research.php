@@ -15,7 +15,7 @@ class Research extends Model
 
     protected $casts = [
         'authors' => 'array',
-        'published_at' => 'date',
+        // 'published_at' => 'date',
     ];
 
     public function user()

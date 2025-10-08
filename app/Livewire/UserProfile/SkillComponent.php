@@ -8,10 +8,21 @@ use Illuminate\Support\Facades\Auth;
 
 class SkillComponent extends Component
 {
-    public $skill = [];
-    public $language,$skills;
+    // The property bound to the multi-select form field
+    public array $skill = []; 
+    public $language, $skills;
+
+    // All available options for the dropdown
+    public array $availableDisciplines = [
+        'math' => 'Mathematics',
+        'science' => 'Science',
+        'history' => 'History',
+        'art' => 'Art',
+        'computer' => 'Computer Science',
+    ];
 
     public function mount(){
+        // Get the existing skill model for the logged-in user
         $this->skills = Skill::firstOrCreate(
             ['user_id' => Auth::id()],
             [
@@ -19,37 +30,29 @@ class SkillComponent extends Component
                 'language' => null,
             ]
         );
-        $this->skill = $this->skills->skill ?? [];
-        $this->language = $this->skills->language ?? null;
-        $this->resetFields();
-    }
-
-    public function resetFields()
-    {
+        
+        // Load the array from the database into the public property
         $this->skill = $this->skills->skill ?? [];
         $this->language = $this->skills->language ?? null;
     }
 
-    public function openEditModal()
-    {
-        $this->dispatch('show-skill-modal');
-    }
-
+    // This method is now much cleaner.
     public function update(){
         $validatedData = $this->validate([
+            // Ensure Livewire validates the $skill property as an array
             'skill' => 'nullable|array',
             'language' => 'nullable|string|max:255',
         ]);
-
+        
+        // 1. Update the existing $this->skills model instance with validated data.
+        // This is all you need for saving!
         $this->skills->update($validatedData);
 
-        $skills = Skill::firstOrCreate(['user_id' => Auth::id()]);
-
-        $skills->skill = $this->skill;
-        $skills->language = $this->language;
-        $skills->save();
-
+        // 2. Clear the flash message for the next action, and notify the user.
         session()->flash('message', 'Skills updated successfully.');
+        
+        // You might dispatch an event to close a modal here, if needed:
+        $this->dispatch('hide-skill-modal');
     }
 
     public function render()
