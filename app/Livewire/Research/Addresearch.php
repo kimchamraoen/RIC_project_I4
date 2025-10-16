@@ -20,17 +20,10 @@ class Addresearch extends Component
     public $day;
     public $month;
     public $year;
-    public $file, $file_path;
+    public $file;
     public $published_at;
     public $description;
     public $addReseach;
-    public $research = [];
-
-    public $header_title = 'Your Research';
-
-    // NEW PROPERTIES FOR SEARCH/INPUT
-    public string $newAuthorName = '';
-    public array $searchResults = []; // Now holds collections of User Models
 
     // public $step = 1;
     public function reseted()
@@ -163,6 +156,7 @@ class Addresearch extends Component
         $this->newAuthorName = '';
         $this->searchResults = [];
     }
+
 
     // Existing methods (removeAuthor and submit)
     public function removeAuthor($author)

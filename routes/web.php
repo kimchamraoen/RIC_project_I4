@@ -40,11 +40,12 @@ Route::get('/register', Register::class)->name('register');
 Route::get('/logout', Logout::class)->name('logout');
 Route::get('/register/{user_id}', Register::class)->name('register_with_user_id');
 // Route::get('/addresearch',Addresearch::class)->name('addresearch'); 
-// Route::get('/question', Question::class)->name('question');
+
 Route::get('/profile', Profile::class)->name('profile');
 Route::get('/items', Iterms::class)->name('items');
 Route::get('/research', Addresearch::class)->name('research');
 Route::get('/question', Question::class)->name('question');
+
 Route::get('/research/details/{researchId}',Secondformadd::class)->name('research.secondform');
 Route::get('/profile', Profile::class)->name('profile');
 Route::get('/follow', Follow::class)->name('follow');
