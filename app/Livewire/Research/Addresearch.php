@@ -22,7 +22,7 @@ class Addresearch extends Component
     public $description;
     public $addReseach;
 
-    // public $step = 1;
+
     public function reseted()
     {
         $this->title = '';
@@ -42,7 +42,7 @@ class Addresearch extends Component
             [
                 'title' => '',  // <--- must include title!
                 'publication_type' => '',
-                'authors' => null,
+                'authors' =>  json_encode([]),
                 'day' => '',
                 'month' => '',
                 'year' => '',
@@ -67,10 +67,15 @@ class Addresearch extends Component
 
     public function addAuthor($author)
     {
+        if (!is_array($this->authors)) {
+            $this->authors = [];
+        }
+
         if (!empty($author) && !in_array($author, $this->authors)) {
             $this->authors[] = $author;
         }
     }
+
 
     public function removeAuthor($author)
     {

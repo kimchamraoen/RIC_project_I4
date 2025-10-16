@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('year');
             $table->string('file_path')->nullable();
             $table->string('description')->nullable();
+            // $table->text('description')->nullable()->change();
             $table->string('file_path2')->nullable();
             $table->timestamps();
         });

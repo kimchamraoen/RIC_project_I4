@@ -28,7 +28,7 @@
         <div class="flex justify-center border-b border-gray-300 pb-0">
             <div class="flex space-x-12 text-lg font-medium text-gray-600">
                 <a href="/" class="pb-3 border-b-4 border-blue-500 text-blue-600">Publications</a>
-                <a href="/author" class="pb-3 hover:text-blue-600 hover:border-b-4 hover:border-blue-300 transition duration-200">Authors</a>
+                <a href="/authors" class="pb-3 hover:text-blue-600 hover:border-b-4 hover:border-blue-300 transition duration-200">Authors</a>
                 <a href="#" class="pb-3 hover:text-blue-600 hover:border-b-4 hover:border-blue-300 transition duration-200">Questions</a>
             </div>
         </div>
