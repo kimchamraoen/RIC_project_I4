@@ -1,88 +1,99 @@
 <div>
-    <div class=" mx-auto bg-white shadow-xl rounded-lg p-6 sm:p-8">
-    {{-- Header Section --}}
-        <div class="flex items-start space-x-6">
-            {{-- Profile Picture --}}
-            <div class="flex-shrink-0">
-                {{-- Replace with your Livewire image upload/display logic or a static asset --}}
-                <img class="h-32 w-32 rounded-full object-cover" 
-                            src="{{ asset('storage/' . ($this->user->image ?? 'default/avatar.png')) }}"  
+    <div>
+        <livewire:components.navbar_user />
+    </div>
+
+    <!-- -----------Profile User------------------ -->
+    <div class="bg-white shadow-sm rounded-md mx-5 mb-5 mt-1">
+        <div>
+            <div class=" mx-auto bg-white shadow-xl rounded-lg px-6 pt-8 ">
+                {{-- Header Section --}}
+                <div class="flex items-start space-x-10 px-32 ">
+                    {{-- Profile Picture --}}
+                    <div class="flex-shrink-0">
+                        {{-- Replace with your Livewire image upload/display logic or a static asset --}}
+                        <img class="h-32 w-32 rounded-full object-cover" 
+                            src="{{ asset('storage/' . ($this->profileInfo->image ?? 'default/avatar.png')) }}"  
                             alt="Profile Picture">
-            </div>
-
-            {{-- Profile Details --}}
-            <div class="flex-grow">
-                <h1 class="text-3xl font-bold text-gray-900 mb-1">
-                    {{ $user->name }}
-                </h1>
-                <p class="text-lg text-gray-600">
-                    {{-- Livewire/Blade Data: $researcher->title --}}
-                    Bachelor of Engineering, Developer of Institute of Technology of Cambodia............
-                </p>
-
-                {{-- Stats Line --}}
-                <div class="flex items-center space-x-8 mt-4 text-sm">
-                    {{-- Stat Item 1 --}}
-                    <div class="flex items-center text-gray-600">
-                        <p class="mr-2">Research Interested Score</p>
-                        <span class="text-xl font-semibold text-gray-900">
-                            {{-- Livewire/Blade Data: $researcher->research_score --}}
-                            0
-                        </span>
                     </div>
+
+                    {{-- Profile Details --}}
+                    <div class="flex-grow">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-4 mt-1">
+                            {{ $profileInfo->name }}
+                        </h1>
+                        <div class="flex">
+                            <p class="text-mg text-gray-600">
+                                {{ $affiliation->degree }}
+                            </p>
+                            <p class="text-mg text-gray-600 mx-2">at</p>
+                            <p class="text-mg text-gray-600">{{ $affiliation->institution }}</p>
+                        </div>
+                        <div>
+                            <p class="text-mg text-gray-600">{{$affiliation->location}}</p>
+                        </div>
+
+                        {{-- Stats Line --}}
+                        <div class="flex items-center space-x-8 mt-4 text-sm">
+                            {{-- Stat Item 1 --}}
+                            <div class="flex items-center text-gray-600">
+                                <p class="mr-2">Research Interested Score</p>
+                                <span class="text-xl font-semibold text-gray-900">
+                                    {{-- Livewire/Blade Data: $researcher->research_score --}}
+                                    0
+                                </span>
+                                <span class="ml-7">|</span>
+                            </div>
+                            
+                            {{-- Stat Item 2 --}}
+                            <div class="flex items-center text-gray-600">
+                                <p class="mr-2">Citations</p>
+                                <span class="text-xl font-semibold text-gray-900">
+                                    {{-- Livewire/Blade Data: $researcher->citations --}}
+                                    0
+                                </span>
+                                <span class="ml-7">|</span>
+                            </div>
+
+                            {{-- Stat Item 3 --}}
+                            <div class="flex items-center text-gray-600">
+                                <p class="mr-2">H-index</p>
+                                <span class="text-xl font-semibold text-gray-900">
+                                    {{-- Livewire/Blade Data: $researcher->h_index --}}
+                                    0
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="border-gray-300 mt-5">
+
+                <div class="flex items-center justify-between px-7 py-3">
+                    <nav class="flex gap-7">
+                        <a href="{{ route('user-profile', ['user' => $user->id]) }}"
+                            class="py-2 border-b-2 {{ request()->routeIs('user-profile') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
+                            Profile
+                        </a>
+
+                        <a href="{{ route('user-research', ['user' => $user->id]) }}"
+                            class="py-2 border-b-2 {{ request()->routeIs('user-research') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
+                            Research
+                        </a>
+
+                        <a href="{{ route('user-stat', ['user' => $user->id]) }}"
+                            class="py-2 border-b-2 {{ request()->routeIs('user-stat') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
+                            State
+                        </a>
+
+                        <a href="{{ route('user-follower', ['user' => $user->id]) }}"
+                            class="py-2 border-b-2 {{ request()->routeIs('user-follower') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
+                            Following
+                        </a>  
+                    </nav>
                     
-                    {{-- Stat Item 2 --}}
-                    <div class="flex items-center text-gray-600">
-                        <p class="mr-2">Citations</p>
-                        <span class="text-xl font-semibold text-gray-900">
-                            {{-- Livewire/Blade Data: $researcher->citations --}}
-                            0
-                        </span>
-                    </div>
-
-                    {{-- Stat Item 3 --}}
-                    <div class="flex items-center text-gray-600">
-                        <p class="mr-2">H-index</p>
-                        <span class="text-xl font-semibold text-gray-900">
-                            {{-- Livewire/Blade Data: $researcher->h_index --}}
-                            0
-                        </span>
-                    </div>
                 </div>
             </div>
         </div>
-        <hr class="border-gray-300 mt-10">
-    
-        {{-- Bottom Navigation --}}
-        <div class="flex items-center justify-between px-7 py-3">
-            <nav class="flex gap-7">
-                <a href="#"
-                class="py-2 border-b-2 {{ request()->routeIs('profile') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
-                Profile
-                </a>
-
-                <a href="#"
-                class="py-2 border-b-2 {{ request()->routeIs('research') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
-                Research
-                </a>
-
-                <a href="#"
-                class="py-2 border-b-2 {{ request()->routeIs('state') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
-                State
-                </a>
-
-                <a href="#"
-                class="py-2 border-b-2 {{ request()->routeIs('following') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
-                Following
-                </a>
-
-                <a href="#"
-                class="py-2 border-b-2 {{ request()->routeIs('saved') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
-                Saved List
-                </a>
-            </nav>
-        </div>
-
     </div>
 </div>
 

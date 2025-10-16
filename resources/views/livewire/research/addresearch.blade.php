@@ -10,7 +10,7 @@
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-5" id="mainFormPage">
                     <div class="p-8">
                         <h2 class="text-2xl font-medium mb-6 flex items-center justify-center">
-                            <i class="fas fa-file-alt mr-2"></i> Your Research
+                            <i class="fas fa-file-alt mr-2"></i> {{ $header_title }}
                         </h2>
 
                         <form wire:submit.prevent="submit">
@@ -18,13 +18,24 @@
                                 <div class="mb-7">
                                     <label for="publication_type" class="block font-medium mb-2">Publication Type</label>
                                     <select wire:model="publication_type" id="publication_type"
-                                            class="w-full py-3 border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-blue-700"
-                                            required>
+                                        class="w-full py-3 border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-blue-700"
+                                        required>
+                                        
                                         <option value="">Select your publication type</option>
-                                        <option value="Journal">Journal</option>
-                                        <option value="Conference">Conference</option>
-                                        <option value="Thesis">Thesis</option>
-                                        <option value="Report">Report</option>
+                                        
+                                        {{-- Existing/Known Options --}}
+                                        <option value="Artical">Artical</option>
+                                        <option value="Conference paper">Conference paper</option>
+                                        <!-- <option value="Thesis">Thesis</option>
+                                        <option value="Report">Report</option> -->
+                                        
+                                        {{-- **CRITICAL**: Add the remaining options from your menu's $categoryMap --}}
+                                        <option value="Data">Data</option>
+                                        <option value="Presentation">Presentation</option>
+                                        <option value="Research">Research</option>
+                                        <option value="Poster">Poster</option>
+                                        <option value="Preprint">Preprint</option>
+                                        
                                     </select>
                                     @error('publication_type') <span class="text-red-600 text-sm mt-1">{{ $message }}</span> @enderror
                                 </div>
@@ -47,6 +58,7 @@
                                     @error('file') <span class="text-red-600 text-sm mt-1">{{ $message }}</span> @enderror
                                 </div>
 
+
                                 <!-- Title -->
                                 <div class="mb-7">
                                     <label for="title" class="block font-medium mb-2">Title</label>
@@ -56,12 +68,12 @@
                                     @error('title') <span class="text-red-600 text-sm mt-1">{{ $message }}</span> @enderror
                                 </div>
 
+
                                 <!-- Authors - Fixed Version -->
                                 <div class="mb-7">
                                     <label class="block font-medium mb-2">Authors</label>
                                     <div class="authors-container">
                                         <div id="authorsInput" class="authors-input flex flex-wrap items-center gap-2 py-3 border-b-2 border-gray-300 bg-transparent min-h-[46px] focus-within:border-blue-700 transition-colors">
-                                            <!-- Author tags will be added here by JavaScript -->
                                             <!-- Display existing authors from Livewire -->
                                             @if($authors && is_array($authors))
                                                 @foreach($authors as $author)
@@ -76,18 +88,80 @@
                                                     </div>
                                                 @endforeach
                                             @endif
+                                            
+                                            <!-- Input field - binds to newAuthorName for searching -->
                                             <input
                                                 id="authorTextInput"
                                                 type="text"
-                                                placeholder="Type author name and press Enter..."
+                                                placeholder="Type author name, email, or research unit to search..."
+                                                
+                                                wire:model.live="newAuthorName"
+                                                
                                                 class="flex-1 min-w-[120px] border-none outline-none py-1.5 px-0 text-sm bg-transparent"
-                                                wire:keydown.enter.prevent="addAuthor($event.target.value)"
+                                                
+                                                wire:keydown.enter.prevent="addAuthor"
                                             >
                                         </div>
+
+                                        <!-- Dropdown Menu for Search Results -->
+                                        @if($newAuthorName && count($searchResults) > 0)
+                                        <div 
+                                            class="absolute z-10 w-fit mt-1 py-2 px-4 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto"
+                                        >
+                                            @foreach($searchResults as $result)
+                                            <div 
+                                                class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex flex-col justify-start border-b border-gray-100"
+                                                
+                                                wire:click.prevent="selectAuthor('{{ $result['name'] }}')" 
+                                            >
+                                                @php
+                                                    $imagePath = $result['profile_information']['image'] ?? null;
+                                                    $avatarSrc = $imagePath 
+                                                                ? asset('storage/' . $imagePath) 
+                                                                : asset('default-avatar.png');
+
+                                                    $researchUnit = $result['profile_information']['research_unit'] ?? null;
+                                                @endphp
+
+                                                <div class="flex justify-between align-middle">
+                                                    <!-- <img src="{{ $avatarSrc }}" 
+                                                        alt="{{ $result['name'] }}" 
+                                                        class="w-8 h-8 rounded-full object-cover flex-shrink-0"> -->
+
+                                                    <!-- Author Name -->
+                                                    <div>
+                                                        <span class="font-semibold text-gray-800">{{ $result['name'] }}</span>
+
+                                                        <div class="flex flex-col text-xs mt-0.5">
+                                                            <!-- Research Unit (Visible if set) -->
+
+                                                            @if($researchUnit)
+                                                                <span class="text-gray-500">Unit: {{ $researchUnit }}</span>
+                                                            @endif
+                                                            <!-- Email -->
+                                                            <span class="text-gray-400">Email: {{ $result['email'] }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                        
+                                        <!-- No results found message, visible only if something has been typed but no results returned -->
+                                        @elseif($newAuthorName && count($searchResults) === 0)
+                                        <div 
+                                            class="absolute z-10 w-fit mt-1 bg-white border border-gray-200 rounded-lg shadow-xl"
+                                        >
+                                            <div class="px-4 py-3 text-sm text-gray-500">
+                                                No users found matching "{{ $newAuthorName }}".
+                                            </div>
+                                        </div>
+                                        @endif
                                         <div class="text-gray-500 text-xs mt-1">Press Enter to add an author</div>
                                     </div>
                                     @error('authors') <span class="text-red-600 text-sm mt-1">{{ $message }}</span> @enderror
                                 </div>
+
 
                                 <!-- Date -->
                                 <div class="mb-7">

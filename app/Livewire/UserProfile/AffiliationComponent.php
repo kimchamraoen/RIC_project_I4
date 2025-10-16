@@ -13,18 +13,10 @@ class AffiliationComponent extends Component
     use WithFileUploads;
 
     // Public properties
-    public Affiliation $affiliation; 
+    // Note: Affiliation must be explicitly typed for model binding
+    public Affiliation $affiliation, $affiliations; 
     public $uploadedImageFile; // Temporary property for the file upload input
-    public $showModal = false; // Used for initial state if not relying fully on Alpine
-
-    // Define validation rules for model binding and file upload
-    protected $rules = [
-        'affiliation.institution' => 'nullable|string|max:255',
-        'affiliation.location'    => 'required|string|max:255',
-        'affiliation.degree'      => 'required|string|max:255',
-        'affiliation.department'  => 'nullable|string|max:255',
-        'uploadedImageFile'       => 'nullable|image|max:1024', // Max 1MB image
-    ];
+    public $institution, $location, $degree, $department, $newImage;
 
     /**
      * Initializes the component, guaranteeing $this->affiliation is always an object.
@@ -41,9 +33,17 @@ class AffiliationComponent extends Component
                 'location' => $user->faculty ?? 'N/A', 
                 'degree' => $user->department ?? 'N/A',
                 'department' => $user->department ?? 'N/A',
-                'newImage' => 'default_image.png',
+                // Assuming 'newImage' is the column name for the image path
+                'newImage' => 'default_image.png', 
             ]
         );
+        // Ensure the model is loaded when opening the modal
+        $this->reset(['uploadedImageFile']);
+
+        $this->institution = $this->affiliation->institution;
+        $this->location = $this->affiliation->location;
+        $this->degree = $this->affiliation->degree;
+        $this->department = $this->affiliation->department;
     }
     
     /**
@@ -51,8 +51,9 @@ class AffiliationComponent extends Component
      */
     public function openEditModal()
     {
-        // Refresh the component state just in case, then open modal
-        $this->mount();
+        // Re-load the latest data just before editing to ensure the form is fresh
+        $this->affiliation->refresh();
+        $this->reset(['uploadedImageFile']); // Clear any previous temporary file
         $this->dispatch('show-affiliation-modal');
     }
 
@@ -62,8 +63,15 @@ class AffiliationComponent extends Component
     public function save()
     {
         // 1. Validate all properties
-        $this->validate();
-        
+        // We validate the model properties and the temporary file property
+        $validatedData = $this->validate([
+            'institution' => 'nullable|string|max:255',
+            'location'    => 'required|string|max:255',
+            'degree'      => 'required|string|max:255',
+            'department'  => 'nullable|string|max:255',
+            'uploadedImageFile'       => 'nullable|image|max:1024',
+        ]);
+
         // 2. Handle image upload and deletion of old image
         if ($this->uploadedImageFile) {
             
@@ -77,12 +85,12 @@ class AffiliationComponent extends Component
             $this->affiliation->newImage = $this->uploadedImageFile->store('images', 'public');
         }
         
-        // 3. Save the model. Since $this->affiliation is model-bound, 
-        // the text fields are already updated before save() is called.
-        $this->affiliation->save();
+        // 3. Save the model. Text fields are already updated via wire:model binding.
+        // $this->affiliation->save();
+        $this->affiliation->update($validatedData);
         
         // 4. Clean up and notify
-        $this->uploadedImageFile = null;
+        $this->uploadedImageFile = null; // Clear temporary file property
 
         $this->dispatch('hide-affiliation-modal'); 
         $this->dispatch('show-toast', ['message' => 'Affiliation updated successfully!', 'type' => 'success']);

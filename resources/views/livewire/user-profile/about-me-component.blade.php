@@ -16,6 +16,20 @@
             <p class="text-gray-500 mt-2">Please fill your information</p>
         @else
             <p class="text-gray-700 mt-2">{{ $aboutMe->introduction }}</p>  
+            <span>
+                                    @php
+                                        $disciplines = $aboutMe->disciplines;
+
+                                        // Check if it's a string (meaning it hasn't been cast or is not an array)
+                                        if (is_string($disciplines)) {
+                                            // Convert the comma-separated string to an array and trim spaces
+                                            $disciplines = array_map('trim', explode(',', $disciplines)); 
+                                        }
+                                    @endphp
+
+                                    {{-- Now $authors is guaranteed to be an array --}}
+                                    {{ implode(', ', $disciplines) }}
+                                </span>
         @endif
     </div>
 
@@ -48,7 +62,7 @@
                     <h3 class="text-xl font-semibold text-gray-800">Edit about me</h3>
                 </div>
 
-                <div class="p-6 space-y-6">
+                <div class="p-6 space-y-6 overflow-scroll max-h-130">
                     <div>
                         <label for="introduction" class="block text-sm font-medium text-gray-700">Introduction</label>
                         <textarea id="introduction" wire:model.defer="introduction" rows="4" class="mt-1 block w-full border rounded-md shadow-sm p-2" placeholder="Write a short intro to tell people about yourself."></textarea>
@@ -58,27 +72,73 @@
 
                     <div>
                         <div class="mb-4">
-                            <label for="disciplines" class="block text-sm font-medium text-gray-700">Disciplines</label>
-                            <select wire:model="disciplines" id="multiple-select-field" class="border w-full p-2 rounded-md">
-                                    <option value="Computer Engineering">Computer Engineering</option>
-                                    <option value="Computer Science">Computer Science</option>
-                                    <option value="Data Science">Data Science</option>
-                                    <option value="Information Technology">Information Technology</option>
-                                    <option value="Software Engineering">Software Engineering</option>
-                                    <option value="Web Development">Web Development</option>
-                                    <option value="Artificial Intelligence">Artificial Intelligence</option>
-                                    <option value="Machine Learning">Machine Learning</option>
-                                    <option value="Cybersecurity">Cybersecurity</option>
-                                    <option value="Cloud Computing">Cloud Computing</option>
-                                    <option value="Network Administration">Network Administration</option>
-                                    <option value="Database Management">Database Management</option>
-                                    <option value="DevOps">DevOps</option>
-                                    <option value="Mobile App Development">Mobile App Development</option>
-                                    <option value="UI/UX Design">UI/UX Design</option>
-                                    <option value="Game Development">Game Development</option>
-                                    <option value="IT Project Management">IT Project Management</option>
-                                    <option value="IT Consulting">IT Consulting</option>
-                            </select>
+                            <label for="disciplines" class="block text-sm mb-2 font-medium text-gray-700">Disciplines</label>
+                            <div class="authors-container border p-3">
+                                <div id="authorsInput" class="authors-input flex flex-wrap items-center gap-2 py-3 border-b-2 border-gray-300 bg-transparent min-h-[46px] focus-within:border-blue-700 transition-colors">
+                                            <!-- Display existing authors from Livewire -->
+                                            @if($disciplines && is_array($disciplines))
+                                                @foreach($disciplines as $discipline)
+                                                    <div class="author-tag inline-flex items-center bg-blue-50 border border-blue-200 rounded-full py-1 pl-3 pr-2 text-blue-800 text-sm">
+                                                        <!-- <i class="fas fa-user mr-1 text-blue-600"></i> -->
+                                                        {{ $discipline }}
+                                                        <button type="button" 
+                                                                wire:click.prevent="removeDiscipline('{{ $discipline }}')"
+                                                                class="remove-author ml-1 text-gray-500 hover:text-gray-700 w-4 h-4 rounded-full flex items-center justify-center text-xs">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                            
+                                            <!-- Input field - binds to newAuthorName for searching -->
+                                            <input
+                                                id="authorTextInput"
+                                                type="text"
+                                                placeholder="Search your Discipline..."
+                                                
+                                                wire:model.live="newDiscipline"
+                                                
+                                                class="flex-1 min-w-[120px] border-none outline-none py-1.5 px-0 text-sm bg-transparent"
+                                                
+                                                wire:keydown.enter.prevent="addDiscipline"
+                                            >
+                                        </div>
+
+                                        <!-- Dropdown Menu for Search Results -->
+                                        @if($newDiscipline && count($searchResults) > 0)
+                                        <div 
+                                            class="w-fit mt-1 py-2 px-4 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto"
+                                        >
+                                            @foreach($searchResults as $result)
+                                            <div 
+                                                class="px-1 py-1 hover:bg-blue-50 cursor-pointer flex flex-col justify-start border-b border-gray-100"
+                                                
+                                                wire:click.prevent="selectDiscipline('{{ $result }}')"  
+                                            >
+                                                <div class="flex justify-between align-middle">
+
+                                                    <!-- Author Name -->
+                                                    <div>
+                                                        <span class="font-semibold text- text-gray-800">{{ $result }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                        
+                                        <!-- No results found message, visible only if something has been typed but no results returned -->
+                                        @elseif($newDiscipline && count($searchResults) === 0)
+                                        <div 
+                                            class="absolute z-10 w-fit mt-1 bg-white border border-gray-200 rounded-lg shadow-xl"
+                                        >
+                                            <div class="px-4 py-3 text-sm text-gray-500">
+                                                No users found matching "{{ $newDiscipline }}".
+                                            </div>
+                                        </div>
+                                        @endif
+                                        <div class="text-gray-500 text-xs mt-1">Press Enter to add an author</div>
+                                    </div>
+                            @error('disciplines') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
@@ -86,12 +146,14 @@
                         <label for="twitter_profile" class="block text-sm font-medium text-gray-700">X (formerly Twitter) profile</label>
                         <input type="text" id="twitter_profile" wire:model.defer="twitter_profile" class="mt-1 block w-full border p-2 rounded-md shadow-sm" placeholder="Enter your profile link or username">
                         <p class="text-xs text-gray-500 mt-1">Only visible to mutual followers</p>
+                        @error('twitter_profile') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
                         <input type="text" id="website" wire:model.defer="website" class="mt-1 block w-full border p-2 rounded-md shadow-sm" placeholder="https://www.example.com">
                         <p class="text-xs text-gray-500 mt-1">Only visible to mutual followers</p>
+                        @error('website') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
@@ -108,37 +170,54 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-
-<script>
-    function initSelect2() {
-        // Your Select2 initialization code
-        $('#multiple-select-field').select2({
-            placeholder: "Choose options",
-            closeOnSelect: false,
-            width: '100%'
-        });
-
-        $('#multiple-select-field').on('change', function () {
-            var data = $(this).val();
-            console.log(data);
-            $wire.set('disciplines', data);
-            // @this.set('disciplines', data);
-        });
-    }
-
-    $(document).ready(function() {
-        initSelect2();
-
-        // Listen for the custom event to reinitialize Select2
-        // Make sure this listener is correctly placed
-        // document.addEventListener('show-about-me-modal', function() {
-        //     // Reinitialize Select2 after the modal has been shown and is in the DOM
-        //     // A small delay might be necessary to ensure all elements are ready
-        //     setTimeout(function() {
-        //         initSelect2();
-        //     }, 100); 
-        // });
-    });
-</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        
+        <script>
+            $(document).ready(function() {
+                let selectDiscipline = [];
+                
+                // Add a new author
+                function addDiscipline(authorName) {
+                    if (!authorName) return;
+                    
+                    // Create a unique ID for this author
+                    const disciplineName = 'author_' + Date.now();
+                    
+                    // Add to selected authors array
+                    selectDisciplines.push({
+                        id: authorId,
+                        name: authorName
+                    });
+                    
+                    // Render the author tag
+                    renderAuthorTag(authorId, authorName);
+                    
+                    // Update the hidden input for Livewire
+                    updateAuthorsInput();
+                    
+                    // Validate
+                    validateAuthors();
+                }
+                
+                // Update the hidden input with selected authors
+                function updateAuthorsInput() {
+                    const authorNames = selectDisciplines.map(discipline => discipline.name);
+                    $('#selectedAuthorsInput').val(JSON.stringify(authorNames));
+                }
+                
+                // Remove an author
+                function removeDiscipline(disciplineName) {
+                    // Remove from selected authors array
+                    selectDiscipline = selectDisciplines.filter(discipline => discipline.id !== disciplineName);
+                    
+                    // Remove the tag from UI
+                    $(`#author-tag-${disciplineName}`).remove();
+                    
+                    // Update the hidden input for Livewire
+                    updateAuthorsInput();
+                    
+                    // Validate
+                    validateAuthors();
+                }
+            });
+        </script>

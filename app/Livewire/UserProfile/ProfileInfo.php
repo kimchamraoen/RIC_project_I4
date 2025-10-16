@@ -91,6 +91,21 @@ class ProfileInfo extends Component
             'newImage' => 'nullable|image|max:1024',
         ];
 
+        // 🧠 Fetch the related user
+        $user = $this->profileInformation->user ?? Auth::user();
+
+        if ($user) {
+        // 🧱 Update the User table as well
+            $user->update([
+                'name' => $this->name,
+                // 'image' => $newImagePath ?: $user->image,
+                // Optional: If your users table also has these columns
+                // 'institution' => $this->institution,
+                // 'faculty' => $this->location,
+                // 'department' => $this->degree,
+            ]);
+        }
+
         $this->validate($rules);
 
         $currentImagePath = $this->profileInformation->image;
@@ -130,6 +145,8 @@ class ProfileInfo extends Component
         $this->newImage = null;
 
         $this->dispatch('profile-updated'); // Dispatch the event
+        // Emit global event to refresh others
+        $this->dispatch('profile-updated-global');
         $this->dispatch('hide-modal');
         $this->dispatch('show-toast', ['message' => 'Profile updated successfully!', 'type' => 'success']);
     }

@@ -79,7 +79,7 @@
                         @if ($newImage)
                             <img src="{{ $newImage->temporaryUrl() }}" alt="New Image Preview" class="h-24 w-24 rounded-full object-cover ring-2 ring-gray-300">
                         @elseif ($image)
-                            <img src="{{ asset('storage/' . $image) }}" alt="Existing Image" class="h-24 w-24 rounded-full object-cover ring-2 ring-gray-300">
+                            <img src="{{ asset('storage/' . $image) }}?v={{ now()->timestamp }}" alt="Existing Image" class="h-24 w-24 rounded-full object-cover ring-2 ring-gray-300">
                         @else
                             <div class="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">No Image</div>
                         @endif
@@ -92,6 +92,7 @@
                     <div class="mb-3">
                         <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                         <input type="text" id="name" wire:model.defer="name" class="mt-2 block w-full h-10 border px-2 rounded-md focus:border-blue-500 focus:ring-blue-500" required>
+                        @error('name') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     {{-- Degree --}}
@@ -104,18 +105,21 @@
                             <option value="Doctoral Degree">Doctoral Degree</option>
                             <option value="Engineer's Degree">Engineer's Degree</option>
                         </select>
+                        @error('degree') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                     
                     {{-- Primary Affiliation --}}
                     <div class="mb-3">
                         <label for="institution" class="block text-sm font-medium text-gray-700">Affiliation</label>
                         <input type="text" id="institution" wire:model.defer="institution" class="mt-2 px-2 block w-full h-10 border rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Institution, Student">
+                        @error('institution') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                     
                     {{-- Current Location --}}
                     <div class="mb-3">
                         <label for="location" class="block text-sm font-medium text-gray-700">Current Location</label>
                         <textarea id="location" wire:model.defer="location" rows="3" class="mt-2 px-2 block w-full border rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Looking for collaborators, a new position, feedback, or something else?"></textarea>
+                        @error('location') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </form>
@@ -157,14 +161,10 @@
             Following
             </a>
 
-            <!-- <a href="#"
-            class="py-2 border-b-2 {{ request()->routeIs('saved') ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}">
-            Saved List
-            </a> -->
         </nav>
-     <!-- <button class="rounded-md bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700">Add Research</button>  -->
+
+        <livewire:components.side-bar />
     </div> 
-    <!-- <hr class="border-gray-300"> -->
 </div>
 
 <script>

@@ -62,19 +62,11 @@ class Search extends Component
                 ->get();
         }
         
-        // 💥 FIX 1: Assign the fetched results to the public $users property
+
         $this->users = $result; 
 
-        // 💥 FIX 2: Pass the public property to the view 
-        // (or remove the array entirely since the property is public)
         return view('livewire.components.search'); 
-        
-        // Note: If you keep the array, it MUST use the public property:
-        /*
-        return view('livewire.components.search', [
-            'users' => $this->users,
-        ]);
-        */
+
     }
 
 }
