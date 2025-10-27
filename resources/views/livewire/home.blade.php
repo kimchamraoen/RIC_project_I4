@@ -1,6 +1,8 @@
 <div class="bg-gray-200 h-full min-h-screen">
     <livewire:components.navbar-user />
 
+    
+
     <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mt-8 max-w-7xl mx-50 px-4 sm:px-6 lg:px-8 mb-10">
         <div class="flex flex-col gap-6 col-span-3">
             <div class="bg-white p-6 rounded-lg shadow-sm h-fit">
@@ -8,7 +10,10 @@
                 @foreach ($research as $item)
                 <div class="">
                     <a href="{{ route('detailPage', ['id' => $item->id]) }}" class="text-xl font-bold text-gray-900">
+
                         {{ $item->title }}
+                        <a href="{{ route('user-profile', $item->user->id) }}">{{$item->user->name}}</a>
+                        
                     </a>
 
                     <div class="flex items-center space-x-3 text-sm mb-4 mt-3">

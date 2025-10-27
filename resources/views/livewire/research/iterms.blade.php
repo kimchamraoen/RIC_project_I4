@@ -100,6 +100,8 @@
 
                                 {{-- Now $authors is guaranteed to be an array --}}
                                 {{ implode(', ', $authors) }}
+
+                                
                             </span>
                         </span>
                     </div>

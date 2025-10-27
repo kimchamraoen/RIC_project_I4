@@ -15,6 +15,7 @@ class AboutMeComponent extends Component
     public array $searchResults = [];
     public $twitter_profile;
     public $website;
+    public string $newAuthorName = '';
 
     public array $availableDisciplines = [
         'Computer Engineering' => 'Computer Engineering',
@@ -116,71 +117,42 @@ class AboutMeComponent extends Component
     }
 
     // app\Livewire\UserProfile\AboutMeComponent.php
-    public function selectDiscipline(string $disciplineName)
+    public function selectAuthor(string $authorName)
     {
-        // 1. Ensure the discipline isn't already added (case-insensitive check)
-        $normalizedDisciplines = array_map('strtolower', array_values($this->disciplines));
-        $normalizedNewDiscipline = strtolower($disciplineName);
-
-        if (!in_array($normalizedNewDiscipline, $normalizedDisciplines)) {
-            // Add the new discipline (using its original casing)
-            $this->disciplines[] = $disciplineName;
+        // The $authorName passed here is the user's name (e.g., "John Doe")
+        // Use the existing addAuthor logic
+        if (!empty($authorName) && !in_array($authorName, $this->authors)) {
+            $this->authors[] = $authorName;
         }
 
-        // 2. Clear the input field to hide the dropdown
-        $this->newDiscipline = ''; 
-
-        // 3. Clear the search results
+        // Clear input and hide results
+        $this->newAuthorName = '';
         $this->searchResults = [];
     }
     
     // UPDATED METHOD: Now uses the bound property $this->newAuthorName
-    public function addDiscipline()
+    public function addAuthor()
     {
         // The $author is the text currently in the input field
-        $discipline = trim($this->newDiscipline);
+        $author = trim($this->newAuthorName);
 
-        if (!empty($discipline) && !in_array($discipline, $this->disciplines)) {
-            $this->disciplines[] = $discipline;
+        if (!empty($author) && !in_array($author, $this->authors)) {
+            $this->authors[] = $author;
         }
         
         // Clear the input field after adding (via Enter key)
-        $this->newDiscipline = '';
+        $this->newAuthorName = '';
         $this->searchResults = [];
     }
 
-    // Your Livewire Component PHP Class
-
-    // ... other methods and properties
-
-    // app\Livewire\UserProfile\AboutMeComponent.php
-
-    public function removeDiscipline(string $disciplineName)
+    // Existing methods (removeAuthor and submit)
+    public function removeAuthor($discipline)
     {
-        // Ensure the property is an array before filtering.
-        if (!is_array($this->disciplines)) {
-            $this->disciplines = [];
-            return;
-        }
-
-        // Use array_filter to keep only the elements that DO NOT match the $disciplineName.
-        // $discipline here is the string value (e.g., 'Mathematics').
-        $this->disciplines = array_filter($this->disciplines, function (string $discipline) use ($disciplineName) {
-            
-            // Return TRUE to KEEP the item; FALSE to remove it.
-            // The comparison uses strict inequality to ensure exact match and type.
-            return $discipline !== $disciplineName;
-            
-        });
-        
-        // Optional: Re-index the array keys (0, 1, 2, ...) after filtering.
-        // This is generally good practice when removing items from an array you iterate over.
-        $this->disciplines = array_values($this->disciplines);
-        
-        // Optionally trigger a success message or re-render
-        $this->dispatch('disciplineRemoved'); 
+        // Resetting the keys after filtering is good practice for clean array indexing
+        $this->disciplines = array_values(array_filter($this->disciplines, fn($a) => $a !== $discipline));
     }
 
+    
     public function save()
     {
         $validatedData = $this->validate([

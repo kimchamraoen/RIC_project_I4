@@ -2,6 +2,11 @@
     <div class="p-6 bg-white rounded-lg shadow-md w-auto px-24">
         <div class="flex justify-between items-start">
             <div class="flex-1 pr-4 max-w-200">
+                
+                    <a href="{{ route('user-profile', $research->user->id) }}">
+                        <h1>{{$research->user->name}}</h1>
+                    </a>
+
                 <div class="border bg-blue-100 w-fit py-1 px-2 mb-2">{{ $research->publication_type }}</div>
                 <h1 class="text-2xl font-bold text-gray-800">{{ $research->title }}</h1>
                 <p class="mt-2 text-sm text-gray-600">
@@ -44,12 +49,14 @@
                 <span class="text-sm font-semibold text-gray-800">
                     <span>
                         @php
-                            $authors = $research->authors;
-                            if (is_string($authors)) {
-                                $authors = array_map('trim', explode(' ', $authors)); 
-                            }
+                            $authors = $research->authorsList();
+                           
                         @endphp
-                        {{ implode(' ', $authors) }}
+                      
+
+                        @foreach($authors as $author)
+                           <a href="{{ route('user-profile', $author->id) }}"> {{ $author->name }}</a>
+                        @endforeach
                     </span>
                 </span>
             </div>

@@ -28,24 +28,28 @@
     </form>
     
     {{-- Dropdown --}}
-    @if (isset($users) && $search != '')
+    @if (isset($researchs) && $search != '')
         <div class="fixed top-0 bottom-0 right-0 left-0" wire:click="resetForm"></div>
         <div class="dropdown-menu d-block p-2 border border-gray-300 rounded-md 
                     bg-white shadow-lg mt-1 absolute w-full z-10">
-            @forelse($users as $i => $user)
-                <a href="{{ route('user-profile', $user['id']) }}" class="{{ $highlightIndex === $i ? 'highlight' : '' }} w-full text-left text-sm text-gray-700 hover:bg-gray-100" 
+            @forelse($researchs as $i => $research)
+                <a href="{{ route('detailPage', ['id' => $research->id]) }}" class="{{ $highlightIndex === $i ? 'highlight' : '' }} w-full text-left text-sm text-gray-700 hover:bg-gray-100" 
                        >
                     <div class="flex items-center p-2 space-x-3 hover:bg-gray-100 rounded-md">
                         <div>
-                            <img src="{{ $user->profileInformation?->image 
-                                        ? asset('storage/' . $user->profileInformation->image) 
+                            <img src="{{ $research->user->profileInformation?->image 
+                                        ? asset('storage/' . $research->user->profileInformation->image) 
                                         : asset('default-avatar.png') }}" 
                                 alt="Profile" 
                                 class="w-8 h-8 rounded-full">
                         </div>
                         <div>
-                            <div class="font-medium text-gray-900">{{ $user->name }}</div>
-                            <div class="text-sm text-gray-500">{{ $user->institution }}</div>
+                                                        <div class="font-medium text-gray-900">{{ $research->title }}</div>
+
+                            <a href="{{ route('user-profile', $research->user->id) }}">
+                                <div class="font-medium text-gray-900">{{ $research->user->name }}</div>
+                            </a>
+                            <div class="text-sm text-gray-500">{{ $research->user->institution }}</div>
                         </div>
                     </div>
                 </a><hr class="border-gray-200">

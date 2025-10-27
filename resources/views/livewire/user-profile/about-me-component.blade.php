@@ -79,10 +79,10 @@
                                             @if($disciplines && is_array($disciplines))
                                                 @foreach($disciplines as $discipline)
                                                     <div class="author-tag inline-flex items-center bg-blue-50 border border-blue-200 rounded-full py-1 pl-3 pr-2 text-blue-800 text-sm">
-                                                        <!-- <i class="fas fa-user mr-1 text-blue-600"></i> -->
+                                                        <i class="fas fa-user mr-1 text-blue-600"></i>
                                                         {{ $discipline }}
                                                         <button type="button" 
-                                                                wire:click.prevent="removeDiscipline('{{ $discipline }}')"
+                                                                wire:click="removeAuthor('{{ $discipline }}')"
                                                                 class="remove-author ml-1 text-gray-500 hover:text-gray-700 w-4 h-4 rounded-full flex items-center justify-center text-xs">
                                                             <i class="fas fa-times"></i>
                                                         </button>
@@ -94,32 +94,54 @@
                                             <input
                                                 id="authorTextInput"
                                                 type="text"
-                                                placeholder="Search your Discipline..."
+                                                placeholder="Type author name, email, or research unit to search..."
                                                 
-                                                wire:model.live="newDiscipline"
+                                                wire:model.live="newAuthorName"
                                                 
                                                 class="flex-1 min-w-[120px] border-none outline-none py-1.5 px-0 text-sm bg-transparent"
                                                 
-                                                wire:keydown.enter.prevent="addDiscipline"
+                                                wire:keydown.enter.prevent="addAuthor"
                                             >
                                         </div>
 
                                         <!-- Dropdown Menu for Search Results -->
-                                        @if($newDiscipline && count($searchResults) > 0)
+                                        @if($newAuthorName && count($searchResults) > 0)
                                         <div 
-                                            class="w-fit mt-1 py-2 px-4 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto"
+                                            class="absolute z-10 w-fit mt-1 py-2 px-4 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto"
                                         >
                                             @foreach($searchResults as $result)
                                             <div 
-                                                class="px-1 py-1 hover:bg-blue-50 cursor-pointer flex flex-col justify-start border-b border-gray-100"
+                                                class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex flex-col justify-start border-b border-gray-100"
                                                 
-                                                wire:click.prevent="selectDiscipline('{{ $result }}')"  
+                                                wire:click.prevent="selectAuthor('{{ $result['name'] }}')" 
                                             >
+                                                @php
+                                                    $imagePath = $result['profile_information']['image'] ?? null;
+                                                    $avatarSrc = $imagePath 
+                                                                ? asset('storage/' . $imagePath) 
+                                                                : asset('default-avatar.png');
+
+                                                    $researchUnit = $result['profile_information']['research_unit'] ?? null;
+                                                @endphp
+
                                                 <div class="flex justify-between align-middle">
+                                                    <!-- <img src="{{ $avatarSrc }}" 
+                                                        alt="{{ $result['name'] }}" 
+                                                        class="w-8 h-8 rounded-full object-cover flex-shrink-0"> -->
 
                                                     <!-- Author Name -->
                                                     <div>
-                                                        <span class="font-semibold text- text-gray-800">{{ $result }}</span>
+                                                        <span class="font-semibold text-gray-800">{{ $result['name'] }}</span>
+
+                                                        <div class="flex flex-col text-xs mt-0.5">
+                                                            <!-- Research Unit (Visible if set) -->
+
+                                                            @if($researchUnit)
+                                                                <span class="text-gray-500">Unit: {{ $researchUnit }}</span>
+                                                            @endif
+                                                            <!-- Email -->
+                                                            <span class="text-gray-400">Email: {{ $result['email'] }}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -127,15 +149,16 @@
                                         </div>
                                         
                                         <!-- No results found message, visible only if something has been typed but no results returned -->
-                                        @elseif($newDiscipline && count($searchResults) === 0)
+                                        @elseif($newAuthorName && count($searchResults) === 0)
                                         <div 
                                             class="absolute z-10 w-fit mt-1 bg-white border border-gray-200 rounded-lg shadow-xl"
                                         >
                                             <div class="px-4 py-3 text-sm text-gray-500">
-                                                No users found matching "{{ $newDiscipline }}".
+                                                No users found matching "{{ $newAuthorName }}".
                                             </div>
                                         </div>
                                         @endif
+
                                         <div class="text-gray-500 text-xs mt-1">Press Enter to add an author</div>
                                     </div>
                             @error('disciplines') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
@@ -170,21 +193,43 @@
     </div>
 </div>
 
+@push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         
         <script>
             $(document).ready(function() {
-                let selectDiscipline = [];
+                let selectedAuthors = [];
+                
+                // Initialize authors functionality
+                function initAuthors() {
+                    // Add author when Enter or comma is pressed
+                    $('#authorTextInput').on('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ',') {
+                            e.preventDefault();
+                            addAuthor($(this).val().trim());
+                            $(this).val('');
+                        }
+                    });
+                    
+                    // Also add author when input loses focus if there's content
+                    $('#authorTextInput').on('blur', function() {
+                        const value = $(this).val().trim();
+                        if (value) {
+                            addAuthor(value);
+                            $(this).val('');
+                        }
+                    });
+                }
                 
                 // Add a new author
-                function addDiscipline(authorName) {
+                function addAuthor(authorName) {
                     if (!authorName) return;
                     
                     // Create a unique ID for this author
-                    const disciplineName = 'author_' + Date.now();
+                    const authorId = 'author_' + Date.now();
                     
                     // Add to selected authors array
-                    selectDisciplines.push({
+                    selectedAuthors.push({
                         id: authorId,
                         name: authorName
                     });
@@ -201,17 +246,38 @@
                 
                 // Update the hidden input with selected authors
                 function updateAuthorsInput() {
-                    const authorNames = selectDisciplines.map(discipline => discipline.name);
+                    const authorNames = selectedAuthors.map(author => author.name);
                     $('#selectedAuthorsInput').val(JSON.stringify(authorNames));
                 }
                 
+                // Render author tag
+                function renderAuthorTag(authorId, authorName) {
+                    const tag = $('<div>').addClass('author-tag inline-flex items-center bg-blue-50 border border-blue-200 rounded-full py-1 pl-3 pr-2 text-blue-800 text-sm').attr('id', `author-tag-${authorId}`);
+                    tag.html(`
+                        <i class="fas fa-user mr-1 text-blue-600"></i>
+                        ${authorName}
+                        <button type="button" class="remove-author ml-1 text-gray-500 hover:text-gray-700 w-4 h-4 rounded-full flex items-center justify-center text-xs" data-id="${authorId}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `);
+                    
+                    // Insert before the input
+                    tag.insertBefore('#authorTextInput');
+                    
+                    // Add remove event
+                    tag.find('.remove-author').on('click', function(e) {
+                        e.stopPropagation();
+                        removeAuthor(authorId);
+                    });
+                }
+                
                 // Remove an author
-                function removeDiscipline(disciplineName) {
+                function removeDiscipline(authorId) {
                     // Remove from selected authors array
-                    selectDiscipline = selectDisciplines.filter(discipline => discipline.id !== disciplineName);
+                    selectedAuthors = selectedAuthors.filter(author => author.id !== authorId);
                     
                     // Remove the tag from UI
-                    $(`#author-tag-${disciplineName}`).remove();
+                    $(`#author-tag-${authorId}`).remove();
                     
                     // Update the hidden input for Livewire
                     updateAuthorsInput();
@@ -219,5 +285,59 @@
                     // Validate
                     validateAuthors();
                 }
+                
+                // Validate authors
+                function validateAuthors() {
+                    if (selectedAuthors.length === 0) {
+                        $('#authorsInput').addClass('border-red-600');
+                        return false;
+                    } else {
+                        $('#authorsInput').removeClass('border-red-600');
+                        return true;
+                    }
+                }
+                
+                // Initialize authors functionality
+                initAuthors();
+                
+                // File input change handler
+                $('#fileInput').on('change', function() {
+                    if (this.files.length > 0) {
+                        $('#fileName').text(this.files[0].name);
+                    } else {
+                        $('#fileName').text('No file selected');
+                    }
+                });
+                
+                // File upload label click handler
+                $('.file-btn').on('click', function() {
+                    $('#fileInput').click();
+                });
+                
+                // Simple carousel functionality
+                let currentSlide = 0;
+                const totalSlides = $('.carousel-item').length;
+                
+                function showSlide(index) {
+                    $('.carousel-item').addClass('hidden');
+                    $('.carousel-item').eq(index).removeClass('hidden');
+                    
+                    $('.indicator').removeClass('active');
+                    $('.indicator').eq(index).addClass('active');
+                }
+                
+                // Auto-advance carousel
+                setInterval(function() {
+                    currentSlide = (currentSlide + 1) % totalSlides;
+                    showSlide(currentSlide);
+                }, 5000);
+                
+                // Indicator click handler
+                $('.indicator').on('click', function() {
+                    const index = $(this).index();
+                    currentSlide = index;
+                    showSlide(currentSlide);
+                });
             });
         </script>
+@endpush

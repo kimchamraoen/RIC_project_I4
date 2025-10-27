@@ -25,4 +25,11 @@ class Research extends Model implements HasMedia
     {
         return $this->belongsTo(User::class);
     }
+    //mapping name authors with User model by name of user with authors field
+   public function authorsList()
+{
+    $authorNames = json_decode($this->authors, true);
+    return User::whereIn('name', $authorNames)->get();
+}
+
 }
