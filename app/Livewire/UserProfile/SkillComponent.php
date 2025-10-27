@@ -8,9 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 class SkillComponent extends Component
 {
-    // The property bound to the multi-select form field
+    /** @var array The property bound to the multi-select form field */
     public array $skill = []; 
-    public $language, $skills;
+    public $language;
+
+    /** @var Skill The Eloquent model instance */
+    public $skills;
 
     // All available options for the dropdown
     public array $availableDisciplines = [
@@ -31,12 +34,22 @@ class SkillComponent extends Component
             ]
         );
         
-        // Load the array from the database into the public property
-        $this->skill = $this->skills->skill ?? [];
-        $this->language = $this->skills->language ?? null;
+        // Load the array from the database into the public property.
+        // Use (array) cast defensively.
+        $this->skill = (array) $this->skills->skill;
+        $this->language = $this->skills->language;
     }
 
-    // This method is now much cleaner.
+    /**
+     * Resets public properties to the current saved state of the model.
+     */
+    public function resetFields()
+    {
+        // Must cast to array because Eloquent cast is handled by the model
+        $this->skill = (array) $this->skills->skill;
+        $this->language = $this->skills->language;
+    }
+
     public function update(){
         $validatedData = $this->validate([
             // Ensure Livewire validates the $skill property as an array
@@ -45,13 +58,17 @@ class SkillComponent extends Component
         ]);
         
         // 1. Update the existing $this->skills model instance with validated data.
-        // This is all you need for saving!
         $this->skills->update($validatedData);
 
-        // 2. Clear the flash message for the next action, and notify the user.
-        session()->flash('message', 'Skills updated successfully.');
+        // 2. CRITICAL SYNCHRONIZATION STEP: 
+        // Refresh the model instance from the database to ensure we get the latest, correctly casted data.
+        $this->skills->refresh(); 
         
-        // You might dispatch an event to close a modal here, if needed:
+        // 3. Reset the component properties using the refreshed model data.
+        $this->resetFields();
+
+        // 4. Notify the user.
+        session()->flash('message', 'Skills updated successfully.');
         $this->dispatch('hide-skill-modal');
     }
 

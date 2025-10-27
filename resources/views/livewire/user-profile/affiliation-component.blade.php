@@ -99,7 +99,7 @@ class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: 
                 <div>
                     <label for="institution" class="block text-sm font-medium text-gray-700">Institution</label>
                     {{-- Binding is correct --}}
-                    <input type="text" id="institution" wire:model.defer="affiliation.institution" class="mt-1 border p-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., University of Science">
+                    <input type="text" id="institution" wire:model.defer="institution" class="mt-1 border p-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., University of Science">
                     {{-- Error check is correct --}}
                     @error('affiliation.institution') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -108,7 +108,7 @@ class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: 
                 <div>
                     <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
                     {{-- Binding is correct --}}
-                    <input type="text" id="location" wire:model.defer="affiliation.location" class="mt-1 border p-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., Phnom Penh, Cambodia">
+                    <input type="text" id="location" wire:model.defer="location" class="mt-1 border p-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., Phnom Penh, Cambodia">
                     {{-- Error check is correct --}}
                     @error('affiliation.location') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -117,7 +117,7 @@ class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: 
                 <div>
                     <label for="degree" class="block text-sm font-medium text-gray-700">Degree</label>
                     {{-- Binding is correct --}}
-                    <input type="text" id="degree" wire:model.defer="affiliation.degree" class="mt-1 border p-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., Student, Associate Professor">
+                    <input type="text" id="degree" wire:model.defer="degree" class="mt-1 border p-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., Student, Associate Professor">
                     {{-- Error check is correct --}}
                     @error('affiliation.degree') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -126,7 +126,7 @@ class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: 
                 <div>
                     <label for="department" class="block text-sm font-medium text-gray-700">Department</label>
                     {{-- Binding is correct --}}
-                    <input type="text" id="department" wire:model.defer="affiliation.department" class="mt-1 border p-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., Department of Information and Communication Engineering">
+                    <input type="text" id="department" wire:model.defer="department" class="mt-1 border p-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., Department of Information and Communication Engineering">
                     {{-- Error check is correct --}}
                     @error('affiliation.department') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>

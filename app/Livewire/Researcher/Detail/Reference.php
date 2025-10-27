@@ -3,17 +3,20 @@
 namespace App\Livewire\Researcher\Detail;
 
 use App\Models\Research;
+use App\Models\User;
 use Livewire\Component;
 
 class Reference extends Component
 {
-    // public $researchItem;
+    public User $user;           // the user
+    public $research;            // their research collection
 
-    // public function mount($id)
-    // {
-    //     // Fetch the data based on the ID
-    //     $this->researchItem = Research::findOrFail($id);
-    // }
+
+    public function mount(User $user)  // receives the {user} from the route
+    {
+        $this->user = $user;
+        $this->research = $user->research()->get();
+    }
 
     public function render()
     {

@@ -53,6 +53,6 @@ Route::get('/stat', State::class)->name('stat');
 Route::get('/home', Home::class)->name('home');
 Route::get('/profile/{user}', Profiles::class)->name('user-profile'); 
 Route::get('/profile/{user}/stat', Stat::class)->name('user-stat');
-Route::get('/profile/{user}/research', Research::class)->name('user-research');
+Route::get('/profile/{user}/research/{publication_type?}', Research::class)->name('user-research');
 Route::get('/profile/{user}/follower', Follower::class)->name('user-follower');
 Route::get('/detailPage/{id}', Bodys::class)->name('detailPage')->where('id', '[0-9]+');

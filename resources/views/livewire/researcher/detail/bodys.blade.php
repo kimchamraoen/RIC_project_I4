@@ -34,13 +34,51 @@
     </div>
 
     <div class="mx-auto text-black font-bold px-72 mt-10 h-auto mb-10">
-        <h2>Full Text</h2>
-        <iframe 
-            src="{{ asset('storage/' . $research->file_path) }}" 
-            style="width:100%; height:100%; border:none;"
-            title="PDF Viewer">
-        </iframe>
+        {{-- Display error message if the PDF conversion failed --}}
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-lg font-semibold mb-4">Research Preview</h2>
+
+            @if($pdfUrl)
+                <div id="pdf-preview-container"></div>
+            @else
+                <p class="text-gray-600">No PDF available.</p>
+            @endif
+        </div>
     </div>
 
     <livewire:components.footer />
+
+    <!-- display pdf file like images -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+        <script>
+            const url = @json($pdfUrl);
+
+            pdfjsLib.GlobalWorkerOptions.workerSrc =
+                'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+            pdfjsLib.getDocument(url).promise.then(pdf => {
+                const container = document.getElementById('pdf-preview-container');
+                
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    pdf.getPage(pageNum).then(page => {
+                        const scale = 1.5;
+                        const viewport = page.getViewport({ scale });
+
+                        // Create canvas for each page
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+                        canvas.style.border = "1px solid #ccc";
+                        canvas.style.marginBottom = "16px";
+
+                        container.appendChild(canvas);
+
+                        page.render({ canvasContext: context, viewport });
+                    });
+                }
+            }).catch(err => {
+                console.error("PDF.js rendering error:", err);
+            });
+        </script>
 </div>
