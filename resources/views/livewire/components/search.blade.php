@@ -25,6 +25,14 @@
                    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                    bg-white placeholder-gray-500"
         >
+        <!-- <input
+            wire:model.live="search"
+            wire:keydown.enter.prevent="runSearch"
+            type="search"
+            placeholder="Search..."
+            class="w-full py-2 pl-10 pr-4 text-sm rounded-full"
+        /> -->
+
     </form>
     
     {{-- Dropdown --}}

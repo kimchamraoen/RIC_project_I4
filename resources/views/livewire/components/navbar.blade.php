@@ -1,31 +1,31 @@
 <div>
     <nav class="bg-white shadow-sm flex justify-between items-center px-4 py-2">
-            <div class="flex items-center space-x-3">
-                <a href="#" class="flex items-center space-x-1 text-xs">
-                    <img src="/images/en.png" alt="English" class="w-5 h-3 object-cover inline-block"> 
-                    <span>English</span>
-                </a>
-                <a href="#" class="flex items-center space-x-1 text-xs">
-                    <img src="/images/fr.png" alt="Français" class="w-5 h-3 object-cover inline-block"> 
-                    <span>Français</span>
-                </a>
-                <a href="#" class="flex items-center space-x-1 text-xs">
-                    <img src="/images/kh.png" alt="Khmer" class="w-5 h-3 object-cover inline-block"> 
-                    <span>ភាសាខ្មែរ</span>
-                </a>
-            </div>
+        <div class="flex items-center space-x-3">
+            <a href="#" class="flex items-center space-x-1 text-xs">
+                <img src="/images/en.png" alt="English" class="w-5 h-3 object-cover inline-block"> 
+                <span>English</span>
+            </a>
+            <a href="#" class="flex items-center space-x-1 text-xs">
+                <img src="/images/fr.png" alt="Français" class="w-5 h-3 object-cover inline-block"> 
+                <span>Français</span>
+            </a>
+            <a href="#" class="flex items-center space-x-1 text-xs">
+                <img src="/images/kh.png" alt="Khmer" class="w-5 h-3 object-cover inline-block"> 
+                <span>ភាសាខ្មែរ</span>
+            </a>
+        </div>
 
-            <div class="flex items-center space-x-2">
-                <a href="/login" class="px-4 py-1 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-50 text-sm">Login</a>
-                <a href="/register" class="px-4 py-1 border bg-blue-600 rounded-lg border-blue-600 text-white hover:bg-blue-500 text-sm">Register</a>
-            </div>
-        </nav>
+        <div class="flex items-center space-x-2">
+            <a href="/login" class="px-4 py-1 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-50 text-sm">Login</a>
+            <a href="/register" class="px-4 py-1 border bg-blue-600 rounded-lg border-blue-600 text-white hover:bg-blue-500 text-sm">Register</a>
+        </div>
+    </nav>
 
         <nav class="bg-white shadow-md">
             <div class="container bg-blue-200 mx-auto flex items-center justify-between py-3 px-4">
                 <div class="flex items-center space-x-3">
                     <img src="/images/ITC-logo.png" alt="ITC Logo" class="h-12"> 
-                    <img src="/images/RIC-logo.png" alt="RIC Logo" class="h-12"> 
+                    <img src="/images/RIS.png" alt="RIC Logo" class="h-12"> 
                 </div>
 
                 <ul class="hidden md:flex space-x-10 font-medium text-blue-900 uppercase">
@@ -58,7 +58,7 @@
              <div class="absolute inset-0 bg-black opacity-10"></div>
              <div class="relative h-full flex align-center  text-white">
                  <div class="flex align-items-center">
-                     <img class="flex align-center" src="/images/RIC-logo.png" alt="RIC Logo" class="h-16 mb-4"> 
+                     <img class="flex align-center" src="/images/RIS.png" alt="RIC Logo" class="h-16 mb-4"> 
                      <!-- <p class="text-white text-lg text-center max-w-3xl">
                          Welcome to our Research and Innovation Center. We are dedicated to advancing knowledge and fostering innovation through cutting-edge research and collaboration.
                      </p> -->

@@ -15,8 +15,8 @@
                         <span>{{ $research->year }}</span>
                     </div>
                     <span class="font-semibold text-gray-700">Retos</span> 68:212-223<br>
-                    <span class="text-blue-600">DOI: 10.47197/retos.v68.108943</span><br>
-                    <span class="text-gray-500">LicenseCC BY-NC-ND 4.0</span>
+                    <!-- <span class="text-blue-600">DOI: 10.47197/retos.v68.108943</span><br> -->
+                    <!-- <span class="text-gray-500">LicenseCC BY-NC-ND 4.0</span> -->
                 </p>
             </div>
             <div class="flex-shrink-0 text-right">
@@ -45,7 +45,26 @@
 
         <div class="flex items-center mt-4 space-x-4">
             <div class="flex items-center space-x-2">
-                <img src="" alt="profile authors" class="w-8 h-8 rounded-full">
+                <!-- <img src="" alt="profile authors" class="w-8 h-8 rounded-full"> -->
+                {{-- Public-facing image --}}
+                <div class="flex items-center mt-2 space-x-2">
+                    @foreach ($authors as $author)
+                        <div class="flex items-center">
+
+                            <img 
+                                src="{{ asset('storage/' . ($author->profileInformation->image ?? 'default.png')) }}"
+                                class="w-8 h-8 rounded-full object-cover"
+                                alt="Author Image">
+
+                            <a href="{{ route('user-profile', $author->id) }}"
+                            class="text-sm font-semibold text-gray-800">
+                            
+                            </a>
+
+                        </div>
+                    @endforeach
+                </div>
+
                 <span class="text-sm font-semibold text-gray-800">
                     <span>
                         @php

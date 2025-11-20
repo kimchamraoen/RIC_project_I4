@@ -1,12 +1,15 @@
 <div>
     <div>
-        <livewire:components.navbar_user />
+        @auth
+            <livewire:components.navbar_user />
+        @else
+            <livewire:components.navbarguest />
+        @endauth
     </div>
-
     <!-- -----------Profile User------------------ -->
-    <div class="bg-white shadow-sm rounded-md mx-5 mb-5 mt-1">
+    <div class="bg-white shadow-sm rounded-md  mb-3 w-full ">
         <div>
-            <div class=" mx-auto bg-white shadow-xl rounded-lg px-6 pt-8 ">
+            <div class=" mx-auto bg-white shadow-xl rounded-lg px-6 pt-8 w-full">
                 {{-- Header Section --}}
                 <div class="flex items-start space-x-10 px-32 ">
                     {{-- Profile Picture --}}

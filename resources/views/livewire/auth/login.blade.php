@@ -4,7 +4,7 @@
     <div id="login" class="flex flex-col md:flex-row items-center justify-center p-8 gap-8 md:gap-16">
         <div class="max-w-md w-full shadow-xl p-10 md:p-10 rounded-32">
             <div class="text-center">
-                <h3 class="text-2xl font-bold text-blue-800">Login to RIC</h3>
+                <h3 class="text-2xl font-bold text-blue-800">Login to RIS</h3>
                 <p class="text-gray-500">Research and Innovation Center</p>
             </div>
 
@@ -58,16 +58,15 @@
                 <a href="/conduct" class="text-blue-600 hover:underline">Sign up</a>
             </p>
 
-            <div class="flex items-center justify-center space-x-2 my-4">
+            <!-- <div class="flex items-center justify-center space-x-2 my-4">
                 <span class="h-px bg-gray-300 flex-1"></span>
                 <span class="text-sm text-gray-500">or</span>
                 <span class="h-px bg-gray-300 flex-1"></span>
-            </div>
-
-            <button id="googleBtn" type="button" class="w-full flex items-center justify-center gap-2 py-2 transition-colors border border-gray-300 rounded-lg hover:bg-gray-100">
+            </div> -->
+            <!-- <button id="googleBtn" type="button" class="w-full flex items-center justify-center gap-2 py-2 transition-colors border border-gray-300 rounded-lg hover:bg-gray-100">
                 <img src="https://cdn.flyonui.com/fy-assets/blocks/marketing-ui/brand-logo/google-icon.png" alt="google icon" class="w-5 h-5 object-cover">
                 Sign in with Google
-            </button>
+            </button> -->
         </div>
     </div>
 

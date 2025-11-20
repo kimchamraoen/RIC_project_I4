@@ -1,9 +1,9 @@
 <div>
-    <footer class="w-full bg-blue-50 py-10">
-        <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-14">
+    <footer class="w-full bg-blue-50 py-6">
+        <div class="max-w-6xl mx-auto px-2 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="md:col-span-1">
-                <img src="/images/ric-logo.png" alt="RIC Logo" class="h-16 mb-4">
-                <p class="text-gray-700 mb-4 flex items-start">
+                <img src="/images/RIS.png" alt="RIC Logo" class="h-40">
+                <p class="text-gray-700 mb-2 flex items-start">
                     <span class="text-blue-600 mr-2"><i class="fas fa-university"></i></span>
                     <span class="ml-2">
                         Institute of Technology of Cambodia, Building H,<br>
@@ -30,7 +30,7 @@
                 </p>
 
                 <div class="mt-8 pt-4 border-t border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Follow Us</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Follow Us</h3>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-500 hover:text-blue-600"><i class="fab fa-facebook-f text-xl"></i></a>
                         <a href="#" class="text-gray-500 hover:text-blue-600"><i class="fab fa-twitter text-xl"></i></a>

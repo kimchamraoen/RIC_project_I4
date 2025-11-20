@@ -1,9 +1,9 @@
 <div>
     <header class="bg-white shadow-md w-full border-b border-gray-200">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-8">
-                <div class="text-2xl font-bold text-gray-900 tracking-wide">
-                    RIC
+            <div class="flex items-center space-x-8 ">
+                <div class="flex items-center space-x-3 py-2"> 
+                    <img src="/images/RIS.png" alt="RIS Logo" class="h-16"> 
                 </div>
 
                 <div class="hidden sm:ml-6 sm:flex sm:space-x-4">

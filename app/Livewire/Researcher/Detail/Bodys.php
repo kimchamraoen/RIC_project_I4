@@ -9,7 +9,7 @@ use Livewire\Component;
 class Bodys extends Component
 {
     public $research;
-    public $pdfUrl = null;
+    public $pdfUrl;
 
     public function mount($id)
     {
@@ -22,6 +22,10 @@ class Bodys extends Component
                 '127.0.0.1',
                 Storage::disk('public')->url($this->research->file_path)
             );
+            
+        }
+         else {
+            $this->pdfUrl = null;
         }
     }
 

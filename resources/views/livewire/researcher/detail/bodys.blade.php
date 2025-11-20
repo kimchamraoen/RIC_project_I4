@@ -1,6 +1,10 @@
 <div class="bg-gray-100 ">
     <div>
-        <livewire:components.navbar_user />
+        @auth
+            <livewire:components.navbar_user />
+        @else
+            <livewire:components.navbarguest />
+        @endauth
     </div>
 
     <livewire:researcher.detail.headers :research="$research"/>
@@ -38,11 +42,17 @@
         <div class="bg-white p-6 rounded-lg shadow">
             <h2 class="text-lg font-semibold mb-4">Research Preview</h2>
 
-            @if($pdfUrl)
-                <div id="pdf-preview-container"></div>
-            @else
-                <p class="text-gray-600">No PDF available.</p>
-            @endif
+        @if($pdfUrl)
+            <iframe 
+                src="{{ $pdfUrl }}" 
+                width="100%" 
+                height="800px"
+                class="border rounded-lg shadow">
+            </iframe>
+        @else
+            <p class="text-gray-600">No PDF available.</p>
+        @endif
+        
         </div>
     </div>
 
@@ -58,6 +68,7 @@
 
             pdfjsLib.getDocument(url).promise.then(pdf => {
                 const container = document.getElementById('pdf-preview-container');
+                
                 
                 for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                     pdf.getPage(pageNum).then(page => {

@@ -18,7 +18,8 @@ use App\Livewire\Auth\Conduct;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Home;
-use App\Livewire\Homepage\Search;
+use App\Livewire\Guestpage\Search;
+use App\Livewire\Guestpage\Authors;
 use App\Livewire\Logout;
 use App\Livewire\OtherUserProfile\Follower;
 use App\Livewire\OtherUserProfile\Profiles;
@@ -34,6 +35,7 @@ use App\Livewire\UserProfileStateFollow\State;
 use App\Models\User;
 
 Route::get('/', Search::class)->name('nonLogin');
+Route::get('/authors', Authors::class)->name('checkinfo');
 Route::get('/login', Login::class)->name('login');
 Route::get('/conduct', Conduct::class)->name('conduct');
 Route::get('/register', Register::class)->name('register');
@@ -41,7 +43,7 @@ Route::get('/logout', Logout::class)->name('logout');
 Route::get('/register/{user_id}', Register::class)->name('register_with_user_id');
 // Route::get('/addresearch',Addresearch::class)->name('addresearch'); 
 
-Route::get('/profile', Profile::class)->name('profile');
+
 Route::get('/items', Iterms::class)->name('items');
 Route::get('/research', Addresearch::class)->name('research');
 Route::get('/question', Question::class)->name('question');
