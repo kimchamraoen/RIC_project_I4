@@ -2,10 +2,6 @@
     <div class="p-6 bg-white rounded-lg shadow-md w-auto px-24">
         <div class="flex justify-between items-start">
             <div class="flex-1 pr-4 max-w-200">
-                
-                    <a href="{{ route('user-profile', $research->user->id) }}">
-                        <h1>{{$research->user->name}}</h1>
-                    </a>
 
                 <div class="border bg-blue-100 w-fit py-1 px-2 mb-2">{{ $research->publication_type }}</div>
                 <h1 class="text-2xl font-bold text-gray-800">{{ $research->title }}</h1>
@@ -14,9 +10,9 @@
                         <span class="mr-3">{{ $research->month }}</span>
                         <span>{{ $research->year }}</span>
                     </div>
-                    <span class="font-semibold text-gray-700">Retos</span> 68:212-223<br>
+                    <!-- <span class="font-semibold text-gray-700">Retos</span> 68:212-223<br>
                     <span class="text-blue-600">DOI: 10.47197/retos.v68.108943</span><br>
-                    <span class="text-gray-500">LicenseCC BY-NC-ND 4.0</span>
+                    <span class="text-gray-500">LicenseCC BY-NC-ND 4.0</span> -->
                 </p>
             </div>
             <div class="flex-shrink-0 text-right">
@@ -45,17 +41,21 @@
 
         <div class="flex items-center mt-4 space-x-4">
             <div class="flex items-center space-x-2">
-                <img src="" alt="profile authors" class="w-8 h-8 rounded-full">
+                <!-- <img src="" alt="profile authors" class="w-8 h-8 rounded-full"> -->
                 <span class="text-sm font-semibold text-gray-800">
-                    <span>
+                    <span class="flex">
+                        <!-- author's post this research -->
+                        <svg class="w-4.5 h-4.5 text-blue-400 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        <a class="mr-2" href="{{ route('user-profile', $research->user->id) }}">{{$research->user->name}}</a>
+                        <!-- authors collaboration -->
                         @php
                             $authors = $research->authorsList();
-                           
                         @endphp
-                      
-
                         @foreach($authors as $author)
-                           <a href="{{ route('user-profile', $author->id) }}"> {{ $author->name }}</a>
+                           <div class="flex">
+                                <svg class="w-4.5 h-4.5 text-blue-400 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                <a class="mr-2" href="{{ route('user-profile', $author->id) }}"> {{ $author->name }}</a>
+                           </div>
                         @endforeach
                     </span>
                 </span>
@@ -64,15 +64,16 @@
 
         <hr class="my-6 border-gray-200">
 
-        <div class="flex items-center justify-between">
+        <!-- <div class="flex items-center justify-between">
             <div class="flex space-x-6 text-gray-700">
             <a href="/overview" class="pb-2 font-semibold text-blue-600 border-b-2 border-blue-600">Overview</a>
             <a href="#" class="pb-2 hover:text-gray-900">States</a>
             <a href="#" class="pb-2 hover:text-gray-900">Citations</a>
             <a href="/reference" class="pb-2 hover:text-gray-900">References</a>
             </div>
-            <div class="flex space-x-4">
-            <button class="px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">Download</button>
+            <div class="flex space-x-4"> -->
+                
+            <!-- <button type="button" wire:click="download($id)" class="px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">Download</button> -->
             <!-- <div class="relative">
                 <button class="flex items-center px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
                 Share
@@ -85,7 +86,7 @@
                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
             </div> -->
-            </div>
-        </div>
+            <!-- </div>
+        </div> -->
     </div>
 </div>

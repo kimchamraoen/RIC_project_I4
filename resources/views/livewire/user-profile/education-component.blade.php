@@ -203,13 +203,26 @@
                     </div>
                     <div>
                         <label for="degree" class="block text-sm font-medium text-gray-700">Degree</label>
-                        <select id="degree" wire:model.defer="degree" class="mt-2 block w-full h-10 px-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <option value="">Enter your degree</option>
-                            <option value="Bachelor's Degree">Bachelor's Degree</option>
-                            <option value="Master's Degree">Master's Degree</option>
-                            <option value="Doctoral Degree">Doctoral Degree</option>
-                            <option value="Engineer's Degree">Engineer's Degree</option>
-                        </select>
+                        <div class="relative">
+                            <select id="degree" wire:model.defer="degree" class="mt-2 block w-full h-10 px-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <option value="">Enter your degree</option>
+                                <option value="Bachelor of IT">Bachelor of IT</option>
+                                <option value="Bachelor of Computer Science">Bachelor of Computer Science</option>
+                                <option value="Bachelor of Engineering">Bachelor of Engineering</option>
+                                <option value="Bachelor of Science">Bachelor of Science</option>
+                                <option value="Bachelor of Technology">Bachelor of Technology</option>
+                                <option value="Master of IT">Master of IT</option>
+                                <option value="Master of Computer Science">Master of Computer Science</option>
+                                <option value="Master of Engineering">Master of Engineering</option>
+                                <option value="Master of Science">Master of Science</option>
+                                <option value="Master of Technology">Master of Technology</option>
+                                <option value="PhD in IT">PhD in IT</option>
+                                <option value="PhD in Computer Science">PhD in Computer Science</option>
+                                <option value="PhD in Engineering">PhD in Engineering</option>
+                                <option value="PhD in Science">PhD in Science</option>
+                                <option value="PhD in Technology">PhD in Technology</option>
+                            </select>
+                        </div>
                     </div>
 
                     {{-- Location --}}

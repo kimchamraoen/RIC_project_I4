@@ -27,6 +27,7 @@
                     'Presentation' => '<rect x="3" y="4" width="18" height="12" rx="2" ry="2"></rect><line x1="12" y1="16" x2="12" y2="20"></line><line x1="8" y1="20" x2="16" y2="20"></line>',
                     'Poster' => '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline>',
                     'Preprint' => '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M15 2H9a1 1 0 0 0-1 1v1h8V3a1 1 0 0 0-1-1z"></path><line x1="10" y1="10" x2="14" y2="10"></line><line x1="10" y1="14" x2="16" y2="14"></line><line x1="10" y1="18" x2="14" y2="18"></line>',
+                    'Question' => '<circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12" y2="17.01"></line>',
                 ];
 
                 // MAP: [Menu Label => Form Value]
@@ -37,6 +38,7 @@
                     'Presentation'            => 'Presentation', 
                     'Poster'                  => 'Poster', 
                     'Preprint'                => 'Preprint', 
+                    'Question'                => 'Question',
                 ];
             @endphp
 
@@ -70,12 +72,16 @@
                         </div>
                         
                         {{-- Link with Routing Logic --}}
-                        <a 
-                            href="{{ route('research', ['type' => $value, 'text' => $label]) }}" 
-                            class="flex items-center px-2 text-black rounded-lg dark:text-black hover:bg-gray-100 dark:hover:bg-gray-100 group"
-                        >
-                            {{ $label }}
-                        </a>
+                        @if ($label === 'Question')
+                            <a href="{{ route('question') }}" class="flex items-center px-2 text-black rounded-lg dark:text-black group">{{ $label }}</a>
+                        @else
+                            <a 
+                                href="{{ route('research', ['type' => $value, 'text' => $label]) }}" 
+                                class="flex items-center px-2 text-black rounded-lg dark:text-black hover:bg-gray-100 dark:hover:bg-gray-100 group"
+                            >
+                                {{ $label }}
+                            </a>
+                        @endif
                     </li>
                 @endforeach
             </ul>

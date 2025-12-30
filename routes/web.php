@@ -12,7 +12,7 @@ use App\Livewire\Register\ConductResearch;
 use App\Livewire\Register\ConnectionResearcher;
 use App\Livewire\Research\Addresearch;
 use App\Livewire\Research\Secondformadd;
-use App\Livewire\Research\Question;
+use App\Livewire\Question;
 use App\Http\Controllers\Auth\AddResearchController;
 use App\Livewire\Auth\Conduct;
 use App\Livewire\Auth\Login;

@@ -12,12 +12,12 @@
             </button>
         </div><hr class="border-gray-300">
 
-        @if (is_null($skills->language) && empty($skills->skill))
+        @if (is_null($skillModel->language) && empty($skillModel->skill))
             <p class="text-gray-500 mt-2">Please fill your information</p>
         @else
-            <div class="flex items-start gap-4 mt-4">
-                <p class="text-gray-700 mt-2">{{ is_array($skills->skill) ? implode(', ', $skills->skill) : $skills->skill }}</p>,
-                <p class="text-gray-700 mt-2">{{ $skills->language }}</p>
+            <div class=" items-start gap-4 mt-4">
+                <div class="text-gray-700 mt-2">{{ is_array($skillModel->skill) ? implode(', ', $skillModel->skill) : $skillModel->skill }}</div>
+                <div class="text-gray-700 mt-2">{{ is_array($skillModel->language) ? implode(', ', $skillModel->language) : $skillModel->language }}</div>
             </div>
         @endif
     </div>
@@ -53,53 +53,94 @@
 
                 <div class="p-6 space-y-6">
                     <div>
-                        <!-- <label for="skill" class="block text-sm font-medium text-gray-700">Skills</label> -->
-                        <!-- <select wire:model="skill" id="multiple-test" multiple>
-                                    <option value="IT">IT</option>
-                                    <option value="Graphic Design">Graphic Design</option>
-                                    <option value="Software">Software</option>
-                                    <option value="Web Development">Web Development</option>
-                                    <option value="Data Analysis">Data Analysis</option>
-                                    <option value="Cybersecurity">Cybersecurity</option>
-                                    <option value="Cloud Computing">Cloud Computing</option>
-                                    <option value="AI & Machine Learning">AI & Machine Learning</option>
-                                    <option value="Networking">Networking</option>
-                                    <option value="Database Management">Database Management</option>
-                                    <option value="DevOps">DevOps</option>
-                                    <option value="Mobile App Development">Mobile App Development</option>
-                                    <option value="Project Management">Project Management</option>
-                                    <option value="UI/UX Design">UI/UX Design</option>
-                                    <option value="Digital Marketing">Digital Marketing</option>
-                                    <option value="Content Creation">Content Creation</option>
-                                    <option value="SEO">SEO</option>      
-                        </select> -->
                         <label for="skill" class="block text-sm font-medium text-gray-700">
                             Select Disciplines (Hold CTRL/CMD to select multiple):
                         </label>
-                        <select 
-                            multiple 
-                            id="multiple-test" 
-                            size="5" 
-                            wire:model="skill" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        > 
-                            @foreach ($availableDisciplines as $key => $label)
-                                <option value="{{ $key }}">{{ $label }}</option>
-                            @endforeach
-                        </select>
+                        <div class="relative"
+                            x-data="{ skill: @entangle('skill') }"
+                            @click.away="$wire.showDropdown = false">
+
+                            {{-- Clickable select box --}}
+                            <div 
+                                class="flex flex-wrap items-center gap-2 py-3 border-b-2 border-gray-300 bg-transparent min-h-[46px] cursor-pointer"
+                                @click="$wire.toggleDropdownSkill()"
+                            >
+                                {{-- Selected tags --}}
+                                <template x-for="skill in skill" :key="skill">
+                                    <div class="inline-flex items-center bg-blue-50 border border-blue-200 rounded-full py-1 pl-3 pr-2 text-blue-800 text-sm">
+                                        <i class="fas fa-tools mr-1 text-blue-600"></i>
+                                        <span x-text="skill"></span>
+                                        <button type="button"
+                                                @click.stop="$wire.removeSkill(skill)"
+                                                class="ml-1 text-gray-500 hover:text-gray-700 w-4 h-4 flex items-center justify-center">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </template>
+
+                                {{-- Placeholder --}}
+                                <span class="text-gray-400" x-show="skill.length === 0">Select skills...</span>
+                            </div>
+
+                            {{-- Dropdown list --}}
+                            @if($showDropdownSkill)
+                                <div class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                                    @foreach($allSkills as $skill)
+                                        <div 
+                                            class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100"
+                                            wire:click="selectSkill('{{ $skill }}')">
+                                            {{ $skill }}
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
                         @error('skill') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     {{-- language --}}
                     <div class="mb-3">
                         <label for="language" class="block text-sm font-medium text-gray-700">Language</label>
-                        <select id="language" wire:model.defer="language" class="mt-2 block w-full h-10 px-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <option value="">Enter your language</option>
-                            <option value="Laravel">Laravel</option>
-                            <option value="Mysql">Mysql</option>
-                            <option value="Graphic">Graphic</option>
-                            <option value="Software">Software</option>
-                        </select>
+                        <div class="relative"
+                            x-data="{ language: @entangle('language') }"
+                            @click.away="$wire.showDropdown = false">
+
+                            {{-- Clickable select box --}}
+                            <div 
+                                class="flex flex-wrap items-center gap-2 py-3 border-b-2 border-gray-300 bg-transparent min-h-[46px] cursor-pointer"
+                                @click="$wire.toggleDropdown()"
+                            >
+                                {{-- Selected tags --}}
+                                <template x-for="language in language" :key="language">
+                                    <div class="inline-flex items-center bg-blue-50 border border-blue-200 rounded-full py-1 pl-3 pr-2 text-blue-800 text-sm">
+                                        <i class="fas fa-tools mr-1 text-blue-600"></i>
+                                        <span x-text="language"></span>
+                                        <button type="button"
+                                                @click.stop="$wire.removeLanguage(language)"
+                                                class="ml-1 text-gray-500 hover:text-gray-700 w-4 h-4 flex items-center justify-center">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </template>
+
+                                {{-- Placeholder --}}
+                                <span class="text-gray-400" x-show="language.length === 0">Select skills...</span>
+                            </div>
+
+                            {{-- Dropdown list --}}
+                            @if($showDropdown)
+                                <div class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                                    @foreach($allLanguages as $language)
+                                        <div 
+                                            class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100"
+                                            wire:click="selectLanguage('{{ $language }}')">
+                                            {{ $language }}
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                        @error('language') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
                 
@@ -117,37 +158,3 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-
-<script>
-    function initSelect2() {
-        // Your Select2 initialization code
-        $('#multiple-test').select2({
-            placeholder: "Choose options",
-            closeOnSelect: false,
-            width: '100%'
-        });
-
-        $('#multiple-select-field').on('change', function () {
-            var data = $(this).val();
-            console.log(data);
-            $wire.set('disciplines', data);
-            // @this.set('disciplines', data);
-        });
-    }
-
-    $(document).ready(function() {
-        initSelect2();
-
-        // Listen for the custom event to reinitialize Select2
-        // Make sure this listener is correctly placed
-        // document.addEventListener('show-about-me-modal', function() {
-        //     // Reinitialize Select2 after the modal has been shown and is in the DOM
-        //     // A small delay might be necessary to ensure all elements are ready
-        //     setTimeout(function() {
-        //         initSelect2();
-        //     }, 100); 
-        // });
-    });
-</script>

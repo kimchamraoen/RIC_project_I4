@@ -13,11 +13,12 @@ class Follower extends Component
     public $profileInfo; 
     // public $aboutMe;
     public $affiliation;
+    public $users;
 
     public function mount(User $user)
     {
         $this->user = $user;
-
+        $this->users = User::limit(10)->get();
         // NOTE: $user->profile must match the relationship name on your User model.
         $this->profileInfo = $user->profileInformation ?? new ProfileInfo(); 
         // $this->aboutMe = $user->aboutMe ?? new AboutMe();

@@ -5,6 +5,7 @@ namespace App\Livewire\Research;
 use App\Models\Research;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Illuminate\Support\Facades\Storage;
 
 class Iterms extends Component
 {
@@ -16,29 +17,69 @@ class Iterms extends Component
 
     public function mount()
     {
-        // 1. Get the 'type' (publication type) from the URL query parameter
-        //    Defaults to an empty string ('') if 'type' is missing.
         $this->filterType = request()->query('type', '');
-        
-        // 2. Build the initial query, FILTERING BY THE AUTHENTICATED USER'S ID FIRST.
-        //    This is the non-negotiable step to ensure user isolation.
-        $query = Research::where('user_id', Auth::id()); 
+
+        $query = Research::where('user_id', Auth::id());
 
         if (!empty($this->filterType)) {
-            // 3a. FILTER BY PUBLICATION TYPE: Applies if 'type' is present in the URL
             $query->where('publication_type', $this->filterType);
-
-            // Update the header title for clarity
             $this->header_title = $this->filterType;
         } else {
-            // 3b. ALL DATA: No publication type filter is added, but the user filter remains.
             $this->header_title = 'All Feartured Research';
         }
+
+        $this->research = $query->latest()->get();
+    }
+
+    public function edit($id)
+    {
+        $this->researchItem = Research::find($id);
+        $this->emit('openEditModal', $this->researchItem);
+    }
+
+    public function update()
+    {
         
-        // 4. Execute the query and load the data for the current user (filtered or unfiltered)
-        $this->research = $query
-            ->latest() // Optional: Order by the latest record
-            ->get(); 
+    }
+
+    public function delete($id)
+    {
+        $research = Research::find($id);
+        if ($research) {
+            // Delete the associated file from storage
+            if ($research->file_path && Storage::disk('public')->exists($research->file_path)) {
+                Storage::disk('public')->delete($research->file_path);
+            }
+
+            $research->delete();
+            session()->flash('message', 'Research deleted successfully.');
+            // Refresh the research list
+            $this->mount();
+        } else {
+            session()->flash('error', 'Research not found.');
+        }
+    }
+
+    public function download($id)
+    {
+        $research = Research::findOrFail($id);
+
+        $filePath = $research->file_path;
+
+        if (!$filePath) {
+            session()->flash('error', 'File path is missing!');
+            return redirect()->back();
+        }
+
+        if (Storage::disk('public')->exists($filePath)) {
+            return Storage::disk('public')->download(
+                $filePath,
+                $research->title . '.pdf'
+            );
+        }
+
+        session()->flash('error', 'File not found!');
+        return redirect()->back();
     }
 
     public function render()
