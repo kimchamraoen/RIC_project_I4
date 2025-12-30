@@ -8,7 +8,7 @@
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <h3 class="mb-5">About  <span class="text-lg text-black font-bold ml-2">{{ $user->name }}</span></h3>
                 <hr class="border-gray-300 my-3">
-                <p>{{ $user->introduction }}</p>
+                <p>{{ $aboutMe->disciplines }}</p>
             </div>
 
             <div class="bg-white p-6 rounded-lg shadow-sm">
@@ -18,8 +18,8 @@
                     alt="Institution image" 
                     class="w-16 h-16 object-cover rounded-md"> -->
 
-                <p>{{ $user->institution }}</p>
-                <p>{{ $user->department }}</p>
+                <p>{{ $affiliation->institution }}</p>
+                <p>{{ $affiliation->department }}</p>
             </div>
 
             <div class="bg-white p-6 rounded-lg shadow-sm">
@@ -40,32 +40,28 @@
                                 <span class="text-gray-600 mr-2">{{ $item->month }}</span>
                                 <span class="text-gray-600">{{ $item->year }}</span>
                             </div>
-                            <span class="text-gray-600">·</span>
-                            <!-- <span class="text-gray-600">4 Reads</span> -->
                         </div>
 
                         <div class="flex items-center space-x-4 text-sm text-gray-500 mb-4">
                             <span class="flex items-center space-x-1">
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                <span>
+                                <span class="flex">
+                                    <svg class="w-4.5 h-4.5 text-blue-400 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    <a class="mr-2" href="{{ route('user-profile', $item->user->id) }}">{{$item->user->name}}</a>
                                     @php
-                                        $authors = $item->authors;
-
-                                        // Check if it's a string (meaning it hasn't been cast or is not an array)
-                                        if (is_string($authors)) {
-                                            // Convert the comma-separated string to an array and trim spaces
-                                            $authors = array_map('trim', explode(',', $authors)); 
-                                        }
+                                        $authors = $item->authorsList();
                                     @endphp
-
-                                    {{-- Now $authors is guaranteed to be an array --}}
-                                    {{ implode(', ', $authors) }}
+                                    @foreach($authors as $author)
+                                    <div class="flex">
+                                            <svg class="w-4.5 h-4.5 text-blue-400 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                            <a class="mr-2" href="{{ route('user-profile', $author->id) }}"> {{ $author->name }}</a>
+                                    </div>
+                                    @endforeach
                                 </span>
                             </span>
                         </div>
 
                         <div class="flex items-end space-x-4">
-                            <button class="px-5 py-1 border border-blue-600 bg-white text-blue-600 font-semibold rounded-full hover:bg-blue-600 hover:text-white transition duration-150 ease-in-out">
+                            <button type="button" wire:click="download({{ $item->id }})" class="px-5 py-1 border border-blue-600 bg-white text-blue-600 font-semibold rounded-full hover:bg-blue-600 hover:text-white transition duration-150 ease-in-out">
                                 Download
                             </button>
 
@@ -98,120 +94,36 @@
                 </h2><hr class="border-gray-300 mt-4">
                 {{-- Author List --}}
 
-                {{-- Author 1: Hamed Golmohammadi (No university shown) --}}
-                <div class="flex items-center justify-between py-2 last:border-b-0">
-                    <div class="flex items-center space-x-3">
-                        {{-- Image Placeholder --}}
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
-                            <img src="path/to/hamed_image.jpg" alt="Hamed Golmohammadi" class="w-full h-full object-cover">
+                @foreach ($users as $user)
+                    {{-- Author 1: Hamed Golmohammadi (No university shown) --}}
+                    <div class="flex items-center justify-between py-2 last:border-b-0">
+                        <div class="flex items-center space-x-3">
+                            {{-- Image Placeholder --}}
+                            <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                                <img 
+                                    src="{{ $user->profileInformation?->image 
+                                            ? asset('storage/' . $user->profileInformation->image) 
+                                            : asset('default-avatar.png') }}"
+                                    alt="{{ $user->name }}" 
+                                    class="w-full h-full object-cover"
+                                >
+                            </div>
+
+                            {{-- Text Details --}}
+                            <div>
+                                <div class="text-gray-800 font-semibold leading-tight">{{ $user->name }}</div>
+                                {{-- University line is omitted as per the image --}}
+                            </div>
                         </div>
 
-                        {{-- Text Details --}}
-                        <div>
-                            <div class="text-gray-800 font-semibold leading-tight">Hamed Golmohammadi</div>
-                            {{-- University line is omitted as per the image --}}
-                        </div>
-                    </div>
-
-                    {{-- Follow Button --}}
-                    <button
-                        class="px-4 py-1.5 ml-4 text-blue-600 border border-blue-600 rounded-md font-medium hover:bg-blue-50 transition-colors duration-150 flex-shrink-0 text-sm"
-                    >
-                        Follow
-                    </button>
-                </div><hr class="border-gray-300">
-
-                {{-- Author 2: Yakup Can Kurt --}}
-                <div class="flex items-center justify-between py-2 last:border-b-0">
-                    <div class="flex items-center space-x-3">
-                        {{-- Image Placeholder --}}
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
-                            <img src="path/to/yakup_image.jpg" alt="Yakup Can Kurt" class="w-full h-full object-cover">
-                        </div>
-
-                        {{-- Text Details --}}
-                        <div>
-                            <div class="text-gray-800 font-semibold leading-tight">Yakup Can Kurt</div>
-                            <div class="text-sm text-gray-500 leading-tight">Sivas Cumhuriyet Uni...</div>
-                        </div>
-                    </div>
-
-                    {{-- Follow Button --}}
-                    <button
-                        class="px-4 py-1.5 ml-4 text-blue-600 border border-blue-600 rounded-md font-medium hover:bg-blue-50 transition-colors duration-150 flex-shrink-0 text-sm"
-                    >
-                        Follow
-                    </button>
-                </div><hr class="border-gray-300">
-
-                {{-- Author 3: Kerim Ali Akgül --}}
-                <div class="flex items-center justify-between py-2 last:border-b-0">
-                    <div class="flex items-center space-x-3">
-                        {{-- Image Placeholder --}}
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
-                            <img src="path/to/kerim_image.jpg" alt="Kerim Ali Akgül" class="w-full h-full object-cover">
-                        </div>
-
-                        {{-- Text Details --}}
-                        <div>
-                            <div class="text-gray-800 font-semibold leading-tight">Kerim Ali Akgül</div>
-                            <div class="text-sm text-gray-500 leading-tight">Sivas Cumhuriyet Uni...</div>
-                        </div>
-                    </div>
-
-                    {{-- Follow Button --}}
-                    <button
-                        class="px-4 py-1.5 ml-4 text-blue-600 border border-blue-600 rounded-md font-medium hover:bg-blue-50 transition-colors duration-150 flex-shrink-0 text-sm"
-                    >
-                        Follow
-                    </button>
-                </div><hr class="border-gray-300">
-
-                {{-- Author 4: Oğuzhan Gül --}}
-                <div class="flex items-center justify-between py-2  last:border-b-0">
-                    <div class="flex items-center space-x-3">
-                        {{-- Image Placeholder --}}
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
-                            <img src="path/to/oguzhan_image.jpg" alt="Oğuzhan Gül" class="w-full h-full object-cover">
-                        </div>
-
-                        {{-- Text Details --}}
-                        <div>
-                            <div class="text-gray-800 font-semibold leading-tight">Oğuzhan Gül</div>
-                            <div class="text-sm text-gray-500 leading-tight">Sivas Cumhuriyet Uni...</div>
-                        </div>
-                    </div>
-
-                    {{-- Follow Button --}}
-                    <button
-                        class="px-4 py-1.5 ml-4 text-blue-600 border border-blue-600 rounded-md font-medium hover:bg-blue-50 transition-colors duration-150 flex-shrink-0 text-sm"
-                    >
-                        Follow
-                    </button>
-                </div><hr class="border-gray-300">
-
-                {{-- Author 5: Ali Akgül (Last item, note the border logic) --}}
-                <div class="flex items-center justify-between py-2">
-                    <div class="flex items-center space-x-3">
-                        {{-- Image Placeholder --}}
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
-                            <img src="path/to/ali_image.png" alt="Ali Akgül" class="w-full h-full object-cover">
-                        </div>
-
-                        {{-- Text Details --}}
-                        <div>
-                            <div class="text-gray-800 font-semibold leading-tight">Ali Akgül</div>
-                            <div class="text-sm text-gray-500 leading-tight">Siirt University</div>
-                        </div>
-                    </div>
-
-                    {{-- Follow Button --}}
-                    <button
-                        class="px-4 py-1.5 ml-4 text-blue-600 border border-blue-600 rounded-md font-medium hover:bg-blue-50 transition-colors duration-150 flex-shrink-0 text-sm"
-                    >
-                        Follow
-                    </button>
-                </div>
+                        {{-- Follow Button --}}
+                        <button
+                            class="px-4 py-1.5 ml-4 text-blue-600 border border-blue-600 rounded-md font-medium hover:bg-blue-50 transition-colors duration-150 flex-shrink-0 text-sm"
+                        >
+                            Follow
+                        </button>
+                    </div><hr class="border-gray-300">
+                @endforeach
             </div>
         </div>
     </div>

@@ -2,14 +2,12 @@
     <header class="bg-white shadow-md w-full border-b border-gray-200">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-8">
-                <div class="text-2xl font-bold text-gray-900 tracking-wide">
-                    RIC
-                </div>
+                <img src="/images/RIC-Logo.png" alt="RIS logo" class="w-20 h-23 flex justify-content-center align-middle">
 
                 <div class="hidden sm:ml-6 sm:flex sm:space-x-4">
                     <a href="{{ route('home') }}" class="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                    <a href="#" class="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Question</a>
-                    </div>
+                    <a href="{{ route('question') }}" class="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Question</a>
+                </div>
             </div>
 
             <div class="flex items-center space-x-4">

@@ -3,71 +3,130 @@
 namespace App\Livewire\UserProfile;
 
 use App\Models\Skill;
+use Doctrine\Inflector\Language;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
 class SkillComponent extends Component
 {
-    /** @var array The property bound to the multi-select form field */
-    public array $skill = []; 
-    public $language;
+    public Skill $skillModel;      // Eloquent model
+    public Language $languageModel;  // Eloquent model
+    public array $skill = [];      // Array of selected skills for UI
+    public array $language = [];   // Array of selected languages for UI
+    // public string $language = '';   // Single language
 
-    /** @var Skill The Eloquent model instance */
-    public $skills;
+    public bool $showDropdownSkill = false;
+    public bool $showDropdown = false;
 
-    // All available options for the dropdown
-    public array $availableDisciplines = [
-        'math' => 'Mathematics',
-        'science' => 'Science',
-        'history' => 'History',
-        'art' => 'Art',
-        'computer' => 'Computer Science',
+    // Replace with DB later if needed
+    public array $allSkills = [
+        'Web Development',
+        'Mobile Development',
+        'Database Management',
+        'Project Management',
+        'Graphic Design',
+        'UI/UX Design',
+        'Cybersecurity',
+        'Networking',
+        'Cloud Computing',
+        'Machine Learning',
+        'Data Analysis',
+        'DevOps',
+    ];
+    public array $allLanguages = [
+        'Khmer',
+        'English',
+        'Spanish',
+        'French',
+        'German',
+        'Chinese',
+        'Japanese',
+        'Russian',
+        'Arabic',
+        'Portuguese',
+        'Hindi',
+        'Bengali',
+        'Korean',
+        'Italian',
     ];
 
-    public function mount(){
-        // Get the existing skill model for the logged-in user
-        $this->skills = Skill::firstOrCreate(
+    /** Toggle dropdown visibility */
+    public function toggleDropdown()
+    {
+        $this->showDropdown = !$this->showDropdown;
+    }
+
+    public function toggleDropdownSkill()
+    {
+        $this->showDropdownSkill = !$this->showDropdownSkill;
+    }
+    
+    /** Add a skill to the array */
+    public function selectSkill($name)
+    {
+        if (!in_array($name, $this->skill)) {
+            $this->skill[] = $name;
+        }
+    }
+
+    public function selectLanguage($name)
+    {
+        if (!in_array($name, $this->language)) {
+            $this->language[] = $name;
+        }
+    }
+
+    /** Remove a skill from the array */
+    public function removeSkill($name)
+    {
+        $this->skill = array_filter($this->skill, fn($s) => $s !== $name);
+    }
+     
+    public function removeLanguage($name)
+    {
+        $this->language = array_filter($this->language, fn($l) => $l !== $name);
+    }
+
+    /** Mount the component with existing data */
+    public function mount()
+    {
+        $this->skillModel = Skill::firstOrCreate(
             ['user_id' => Auth::id()],
             [
                 'skill' => [],
-                'language' => null,
+                'language' => [],
             ]
         );
-        
-        // Load the array from the database into the public property.
-        // Use (array) cast defensively.
-        $this->skill = (array) $this->skills->skill;
-        $this->language = $this->skills->language;
+
+        // Load values from model into public properties for UI
+        $this->skill = $this->skillModel->skill ?? [];
+        $this->language = $this->skillModel->language ?? [];
     }
 
-    /**
-     * Resets public properties to the current saved state of the model.
-     */
+    /** Reset component fields to current model state */
     public function resetFields()
     {
-        // Must cast to array because Eloquent cast is handled by the model
-        $this->skill = (array) $this->skills->skill;
-        $this->language = $this->skills->language;
+        $this->skill = $this->skillModel->skills ?? [];
+        $this->language = $this->skillModel->language ?? [];
     }
 
-    public function update(){
+    /** Update the model with validated data */
+    public function update()
+    {
         $validatedData = $this->validate([
-            // Ensure Livewire validates the $skill property as an array
             'skill' => 'nullable|array',
-            'language' => 'nullable|string|max:255',
+            'language' => 'nullable|array',
         ]);
-        
-        // 1. Update the existing $this->skills model instance with validated data.
-        $this->skills->update($validatedData);
 
-        // 2. CRITICAL SYNCHRONIZATION STEP: 
-        // Refresh the model instance from the database to ensure we get the latest, correctly casted data.
-        $this->skills->refresh(); 
-        
-        // 3. Reset the component properties using the refreshed model data.
-        $this->resetFields();
+        // Save changes to the model
+        $this->skillModel->update($validatedData);
 
-        // 4. Notify the user.
+        // Refresh model to get casted values
+        $this->skillModel->refresh();
+
+        // Update component UI properties
+        // $this->resetFields();
+
         session()->flash('message', 'Skills updated successfully.');
         $this->dispatch('hide-skill-modal');
     }

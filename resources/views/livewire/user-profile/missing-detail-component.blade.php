@@ -107,7 +107,23 @@
                         
                         <div class="col-span-1 md:col-span-2">
                             <label for="department" class="block text-sm font-medium text-gray-700">Department</label>
-                            <input wire:model="department" type="text" id="department" class="mt-1  block w-full rounded-md border p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <!-- <input wire:model="department" type="text" id="department" class="mt-1  block w-full rounded-md border p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"> -->
+                            <div class="relative">
+                                <select id="department" wire:model.defer="department" class="mt-2 block w-full h-10 px-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">Enter your department</option>
+                                    <option value="GIC">GIC</option>
+                                    <option value="GCA">GCA</option>
+                                    <option value="GCI">GCI</option>
+                                    <option value="AMS">AMS</option>
+                                    <option value="GAR">GAR</option>
+                                    <option value="GTI">GTI</option>
+                                    <option value="GEE">GEE</option>
+                                    <option value="GIM">GIM</option>
+                                    <option value="GTR">GTR</option>
+                                    <option value="GGG">GGG</option>
+                                    <option value="GRU">GRU</option>
+                                </select>
+                            </div>
                             @error('department') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                         </div>
                         

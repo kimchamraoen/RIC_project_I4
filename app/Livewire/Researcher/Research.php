@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Storage;
 
 class Research extends Component
 {
@@ -28,6 +29,28 @@ class Research extends Component
         } else {
             $this->research = $user->research()->get();
         }
+    }
+
+    public function download($id)
+    {
+        $research = ModelsResearch::findOrFail($id);
+
+        $filePath = $research->file_path;
+
+        if (!$filePath) {
+            session()->flash('error', 'File path is missing!');
+            return redirect()->back();
+        }
+
+        if (Storage::disk('public')->exists($filePath)) {
+            return Storage::disk('public')->download(
+                $filePath,
+                $research->title . '.pdf'
+            );
+        }
+
+        session()->flash('error', 'File not found!');
+        return redirect()->back();
     }
 
     public function render()

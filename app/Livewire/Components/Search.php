@@ -67,26 +67,25 @@ class Search extends Component
             $search = strtolower($this->search);
 
             $result = Research::with(['user','user.profileInformation'])
-
-                // ->with('user.profileInformation') 
-                ->where('user_id', '!=', $userCurrentId) 
-                
-                ->whereHas('user', function ($q) use ($userCurrentId,$search) {
-                    $q->where('id', '!=', $userCurrentId);
-                    $q->where(function ($q2) use ($search) {
-                        $q2->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
-                           ->orWhereRaw('LOWER(research_unit) LIKE ?', ["%{$search}%"]);
+                ->where('user_id', '!=', $userCurrentId) // exclude yourself
+                ->where(function($query) use ($userCurrentId, $search) {
+                    
+                    // Match user name
+                    $query->whereHas('user', function ($q) use ($userCurrentId, $search) {
+                        $q->where('id', '!=', $userCurrentId)
+                        ->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"]);
                     });
-                })
-                ->orWhere(function ($q) use ($search) {
-                    $q->whereRaw('LOWER(title) LIKE ?', ["%{$search}%"])
-                    ->orWhereRaw('LOWER(publication_type) LIKE ?', ["%{$search}%"]);
+
+                    // Or match research title/publication_type
+                    $query->orWhere(function ($q) use ($search) {
+                        $q->whereRaw('LOWER(title) LIKE ?', ["%{$search}%"])
+                        ->orWhereRaw('LOWER(publication_type) LIKE ?', ["%{$search}%"]);
+                    });
                 })
                 ->limit(5)
                 ->get();
-                // dd($result);
-               
         }
+
 
         $this->researchs = $result; 
 

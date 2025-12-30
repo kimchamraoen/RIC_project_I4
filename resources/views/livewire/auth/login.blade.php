@@ -4,8 +4,8 @@
     <div id="login" class="flex flex-col md:flex-row items-center justify-center p-8 gap-8 md:gap-16">
         <div class="max-w-md w-full shadow-xl p-10 md:p-10 rounded-32">
             <div class="text-center">
-                <h3 class="text-2xl font-bold text-blue-800">Login to RIC</h3>
-                <p class="text-gray-500">Research and Innovation Center</p>
+                <h3 class="text-2xl font-bold text-blue-800">Login to RIS</h3>
+                <p class="text-gray-500">Research and Innovation Science</p>
             </div>
 
             {{-- Flash messages for success and error --}}

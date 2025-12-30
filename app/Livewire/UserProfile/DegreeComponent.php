@@ -29,15 +29,13 @@ class DegreeComponent extends Component
         $this->degree = '';
     }
 
-    public function updated()
+    public function submit()
     {
-        $this->validateOnly([
+        $validatedData = $this->validate([
             'degree' => 'nullable|string|max:255',
         ]);
 
-        $this->degrees->update([
-            'degree' => $this->degree,
-        ]);
+        $this->degrees->update($validatedData);
 
         session()->flash('message', 'Degree updated successfully.');
     }

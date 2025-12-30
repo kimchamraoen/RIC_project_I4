@@ -70,7 +70,7 @@ class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: 
                 <h3 class="text-xl font-semibold text-gray-800">Edit Affiliations</h3>
             </div>
 
-            <div class="p-6 space-y-4">
+            <div class="p-6 space-y-4 overflow-scroll max-h-130">
                 
                 {{-- Profile Picture Upload and Preview --}}
                 <div class="flex flex-col items-center space-y-3">
@@ -117,7 +117,26 @@ class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: 
                 <div>
                     <label for="degree" class="block text-sm font-medium text-gray-700">Degree</label>
                     {{-- Binding is correct --}}
-                    <input type="text" id="degree" wire:model.defer="degree" class="mt-1 border p-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., Student, Associate Professor">
+                    <div class="relative">
+                            <select id="degree" wire:model.defer="degree" class="mt-2 block w-full h-10 px-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <option value="">Enter your degree</option>
+                                <option value="Bachelor of IT">Bachelor of IT</option>
+                                <option value="Bachelor of Computer Science">Bachelor of Computer Science</option>
+                                <option value="Bachelor of Engineering">Bachelor of Engineering</option>
+                                <option value="Bachelor of Science">Bachelor of Science</option>
+                                <option value="Bachelor of Technology">Bachelor of Technology</option>
+                                <option value="Master of IT">Master of IT</option>
+                                <option value="Master of Computer Science">Master of Computer Science</option>
+                                <option value="Master of Engineering">Master of Engineering</option>
+                                <option value="Master of Science">Master of Science</option>
+                                <option value="Master of Technology">Master of Technology</option>
+                                <option value="PhD in IT">PhD in IT</option>
+                                <option value="PhD in Computer Science">PhD in Computer Science</option>
+                                <option value="PhD in Engineering">PhD in Engineering</option>
+                                <option value="PhD in Science">PhD in Science</option>
+                                <option value="PhD in Technology">PhD in Technology</option>
+                            </select>
+                        </div>
                     {{-- Error check is correct --}}
                     @error('affiliation.degree') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -126,7 +145,23 @@ class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: 
                 <div>
                     <label for="department" class="block text-sm font-medium text-gray-700">Department</label>
                     {{-- Binding is correct --}}
-                    <input type="text" id="department" wire:model.defer="department" class="mt-1 border p-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., Department of Information and Communication Engineering">
+                    <!-- <input type="text" id="department" wire:model.defer="department" class="mt-1 border p-2 block w-full border-gray-300 rounded-md shadow-sm" placeholder="e.g., Department of Information and Communication Engineering"> -->
+                    <div class="relative">
+                            <select id="department" wire:model.defer="department" class="mt-2 block w-full h-10 px-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <option value="">Enter your department</option>
+                                <option value="GIC">GIC</option>
+                                <option value="GCA">GCA</option>
+                                <option value="GCI">GCI</option>
+                                <option value="AMS">AMS</option>
+                                <option value="GAR">GAR</option>
+                                <option value="GTI">GTI</option>
+                                <option value="GEE">GEE</option>
+                                <option value="GIM">GIM</option>
+                                <option value="GTR">GTR</option>
+                                <option value="GGG">GGG</option>
+                                <option value="GRU">GRU</option>
+                            </select>
+                        </div>
                     {{-- Error check is correct --}}
                     @error('affiliation.department') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>

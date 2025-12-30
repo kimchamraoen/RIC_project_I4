@@ -17,7 +17,7 @@ class Login extends Component
         $this->password = '';
     }
 
-     public function login()
+    public function login()
     {
         $this->validate([
             'email' => 'required|email',
@@ -31,7 +31,7 @@ class Login extends Component
             session()->flash('error', 'Invalid email or password.');
         }
 
-        $this->resetField(); // Reset fields if login fails
+        $this->resetField();
     }
 
     public function render()

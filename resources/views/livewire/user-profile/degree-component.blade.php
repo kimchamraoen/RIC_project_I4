@@ -50,7 +50,7 @@
             x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             class="relative w-full max-w-lg bg-white rounded-lg shadow-xl overflow-hidden transform transition-all duration-300">
-            <form wire:submit.prevent="updated">
+            <form wire:submit.prevent="submit">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-xl font-semibold text-gray-800">Edit your degree</h3>
                 </div>
@@ -61,10 +61,21 @@
                         <div class="relative">
                             <select id="degree" wire:model.defer="degree" class="mt-2 block w-full h-10 px-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 <option value="">Enter your degree</option>
-                                <option value="Bachelor's Degree">Bachelor's Degree</option>
-                                <option value="Master's Degree">Master's Degree</option>
-                                <option value="Doctoral Degree">Doctoral Degree</option>
-                                <option value="Engineer's Degree">Engineer's Degree</option>
+                                <option value="Bachelor of IT">Bachelor of IT</option>
+                                <option value="Bachelor of Computer Science">Bachelor of Computer Science</option>
+                                <option value="Bachelor of Engineering">Bachelor of Engineering</option>
+                                <option value="Bachelor of Science">Bachelor of Science</option>
+                                <option value="Bachelor of Technology">Bachelor of Technology</option>
+                                <option value="Master of IT">Master of IT</option>
+                                <option value="Master of Computer Science">Master of Computer Science</option>
+                                <option value="Master of Engineering">Master of Engineering</option>
+                                <option value="Master of Science">Master of Science</option>
+                                <option value="Master of Technology">Master of Technology</option>
+                                <option value="PhD in IT">PhD in IT</option>
+                                <option value="PhD in Computer Science">PhD in Computer Science</option>
+                                <option value="PhD in Engineering">PhD in Engineering</option>
+                                <option value="PhD in Science">PhD in Science</option>
+                                <option value="PhD in Technology">PhD in Technology</option>
                             </select>
                         </div>
                         {{-- @error('degree') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror --}}

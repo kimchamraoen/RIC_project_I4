@@ -71,7 +71,7 @@
                 </div>
 
                 {{-- Body (Scrollable) --}}
-                <div class="p-6 scrollbar max-h-160 overflow-y-auto">
+                <div class="p-6 scrollbar overflow-scroll max-h-130">
                     <p class="text-gray-700 font-medium">Edit your profile header</p>
                     
                     {{-- Profile Image --}}

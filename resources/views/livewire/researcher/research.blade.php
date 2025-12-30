@@ -3,7 +3,7 @@
 
     <!-- --------------------body research------------------ -->
     <div class="grid h-auto grid-cols-6 gap-[-2rem] justify-center px-50 mb-10">
-        <div class="w-64 bg-white shadow-lg h-120 col-span-2 rounded-lg">
+        <div class="w-64 bg-white shadow-lg h-120 col-span-2 rounded-lg mt-5">
             <div class="p-4 border-b">
                 <h2 class="text-xl font-bold text-gray-800">Research</h2>
             </div>
@@ -19,7 +19,7 @@
                 <a href="{{ route('user-research', ['user' => $user->id, 'publication_type' => 'Article']) }}"  class="menu-item block pl-12 pr-6 py-2 text-sm text-gray-700 hover:bg-gray-50 border-l-4 border-transparent hover:border-gray-200">
                     Artical
                 </a>
-                <a href="{{ route('user-research', ['user' => $user->id, 'publication_type' => 'Conference']) }}"  class="menu-item block pl-12 pr-6 py-2 text-sm text-gray-700 hover:bg-gray-50 border-l-4 border-transparent hover:border-gray-200">
+                <a href="{{ route('user-research', ['user' => $user->id, 'publication_type' => 'Conference paper']) }}"  class="menu-item block pl-12 pr-6 py-2 text-sm text-gray-700 hover:bg-gray-50 border-l-4 border-transparent hover:border-gray-200">
                     Conference paper
                 </a>
                 <a href="{{ route('user-research', ['user' => $user->id, 'publication_type' => 'Data']) }}" class="menu-item block pl-12 pr-6 py-2 text-sm text-gray-700 hover:bg-gray-50 border-l-4 border-transparent hover:border-gray-200">
@@ -42,7 +42,7 @@
         </div>
 
         <div class="flex-1 w-auto col-span-4 mb-10">
-            <div class="p-6 bg-white rounded-lg shadow">
+            <!-- <div class="p-6 bg-white rounded-lg shadow">
                 <h3 class="text-lg font-semibold text-gray-800">Research Items</h3>
                 <div class="relative mt-4">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -50,7 +50,7 @@
                     </div>
                     <input type="text" name="search" wire:model.live.debounce.300ms="search"  placeholder="Search by publication title" class="w-full py-2 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-500 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-            </div>
+            </div> -->
 
             <div class="bg-white p-6 rounded-lg shadow-sm mt-5">
                 <h3 class="mb-5">Feartured Research</h3>
@@ -70,32 +70,28 @@
                                 <span class="text-gray-600 mr-2">{{ $item->month }}</span>
                                 <span class="text-gray-600">{{ $item->year }}</span>
                             </div>
-                            <span class="text-gray-600">·</span>
-                            <!-- <span class="text-gray-600">4 Reads</span> -->
                         </div>
 
                         <div class="flex items-center space-x-4 text-sm text-gray-500 mb-4">
                             <span class="flex items-center space-x-1">
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                <span>
+                                <span class="flex">
+                                    <svg class="w-4.5 h-4.5 text-blue-400 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    <a class="mr-2" href="{{ route('user-profile', $item->user->id) }}">{{$item->user->name}}</a>
                                     @php
-                                        $authors = $item->authors;
-
-                                        // Check if it's a string (meaning it hasn't been cast or is not an array)
-                                        if (is_string($authors)) {
-                                            // Convert the comma-separated string to an array and trim spaces
-                                            $authors = array_map('trim', explode(',', $authors)); 
-                                        }
+                                        $authors = $item->authorsList();
                                     @endphp
-
-                                    {{-- Now $authors is guaranteed to be an array --}}
-                                    {{ implode(', ', $authors) }}
+                                    @foreach($authors as $author)
+                                    <div class="flex">
+                                            <svg class="w-4.5 h-4.5 text-blue-400 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                            <a class="mr-2" href="{{ route('user-profile', $author->id) }}"> {{ $author->name }}</a>
+                                    </div>
+                                    @endforeach
                                 </span>
                             </span>
                         </div>
 
                         <div class="flex items-end space-x-4">
-                            <button class="px-5 py-1 border border-blue-600 bg-white text-blue-600 font-semibold rounded-full hover:bg-blue-600 hover:text-white transition duration-150 ease-in-out">
+                            <button type="button" wire:click="download({{ $item->id }})" class="px-5 py-1 border border-blue-600 bg-white text-blue-600 font-semibold rounded-full hover:bg-blue-600 hover:text-white transition duration-150 ease-in-out">
                                 Download
                             </button>
                         </div>
